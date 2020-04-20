@@ -1,0 +1,75 @@
+.maintain{
+    padding: 30px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px; width: 95%;height:800px
+}
+.leftMain{
+    height: 650px; float: left
+}
+.rightForm{
+   /* height: 400px;
+    float: right;
+    padding-right: 25%;
+    position: relative;*/
+
+}
+.baseInfoForm{
+    width: 100%;
+    height: 200px;
+    margin-top: 3%;
+}
+.opnionForm{
+    width: 75%;
+    height: 200px;
+    float: left;
+    margin-top: 10%;
+
+}
+.opnionForms{
+    width: 75%;
+    height: 200px;
+    float: left;
+    margin-top: 33%;
+
+}
+
+.fileForm{
+    width: 100%;
+    height: 250px;
+    margin-top: 3%;
+}
+.baseInfoButtonGrops{
+    padding-left: 150px;
+}
+.managerGroups{
+    padding-top: 50px;
+    padding-left: 180px;
+}
+.fileListTable{
+    padding-left: 150px;
+    margin-top: 30px;
+}
+.fileGroups{
+    padding-top: 6%;
+    padding-left: 150px;
+}
+.fileUpload{
+    border: none;
+    float: left;
+    width: 10%;
+}
+.setpStyle{
+    float: left;
+
+}
+.submitStyle{
+    text-align: center;
+    margin-top: 2%;
+}
+
+.user-avator {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}

@@ -1,0 +1,32 @@
+.message-title{
+    cursor: pointer;
+}
+.handle-row{
+    margin-top: 30px;
+}
+.handle-box {
+    margin-bottom: 20px;
+}
+
+.handle-select {
+    width: 120px;
+}
+
+.handle-input {
+    width: 200px;
+    display: inline-block;
+}
+.del-dialog-cnt{
+    font-size: 16px;
+    text-align: center
+}
+.table{
+    width: 100%;
+    font-size: 14px;
+}
+.red{
+    color: #ff0000;
+}
+.mr10{
+    margin-right: 10px;
+}
