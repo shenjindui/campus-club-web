@@ -15,7 +15,6 @@
                             :visible.sync="dialogVisible"
                             width="30%"
                             >
-                           <!-- :before-close="handleClose()">-->
                         <span >{{errorMessage}}</span>
                         <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -41,10 +40,8 @@
                         <el-button type="primary" icon="search" @click="visible=false">取消</el-button>
                     </el-popover>
                     <!--角色选择器-->
-                    <!-- ///-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
                     <template v-if="message === 'first'">
                         <div class="handle-box">
-                           <!-- {{statusCds}}-->
                             <el-select v-model="params.statusCd" placeholder="菜单状态" class="handle-select mr10">
                                 <el-option
                                         v-for="item in statusCds"
@@ -306,57 +303,14 @@
                         <!-- //修改菜单的对话框 end-->
                     </template>
                 </el-tab-pane>
-                <!--<el-tab-pane :label="`已读消息(${read.length})`" name="second">
-                    <template v-if="message === 'second'">
-                        <el-table :data="read" :show-header="false" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
-                                <template slot-scope="scope">
-                                    <el-button type="danger" @click="handleDel(scope.$index)">删除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">删除全部</el-button>
-                        </div>
-                    </template>
-                </el-tab-pane>
-                <el-tab-pane :label="`回收站(${recycle.length})`" name="third">
-                    <template v-if="message === 'third'">
-                        <el-table :data="recycle" :show-header="false" style="width: 100%">
-                            <el-table-column>
-                                <template slot-scope="scope">
-                                    <span class="message-title">{{scope.row.title}}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="date" width="150"></el-table-column>
-                            <el-table-column width="120">
-                                <template slot-scope="scope">
-                                    <el-button @click="handleRestore(scope.$index)">还原</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="handle-row">
-                            <el-button type="danger">清空回收站</el-button>
-                        </div>
-                    </template>
-                </el-tab-pane>-->
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
 
 <script src="../../../style/js/menu/menu.js">
 </script>
 <style scoped>
-    @import '../../../style/csss/menu/menu.css';/* 引入css文件*/
+    @import '../../../style/csss/menu/menu.css';
 </style>
 

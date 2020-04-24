@@ -583,8 +583,12 @@ export default {
                         })
                     }
                     if (successResponse.data.status === 500) { //后台异常时
-                        this.errorMessage =successResponse.data.description;
-                        //this.dialogVisible=true;
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'error'
+                        })
+                       /* this.errorMessage =successResponse.data.description;
                         this.$confirm('请不要重复刷新?', '提示', {
                             confirmButtonText: '确定',
                             cancelButtonText: '取消',
@@ -596,7 +600,7 @@ export default {
                             });
                         }).catch(() => {
 
-                        });
+                        });*/
                     }
                 })
                 .catch(failResponse => {});
