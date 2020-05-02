@@ -175,6 +175,11 @@ export default new Router({
                     meta: { title: '社团公告管理' },
                 },
                 {
+                    path: '/stsyClubNoticeinfo',
+                    component: resolve => require(['../components/page/clubNotice/stsy/clubNoticeInfo.vue'], resolve),
+                    meta: { title: '社团公告管理' },
+                },
+                {
                     path: '/clubNoticeUpdate',
                     component: resolve => require(['../components/page/clubNotice/clubNoticeUpdate.vue'], resolve),
                     meta: { title: '社团公告管理' },
@@ -245,6 +250,11 @@ export default new Router({
                     meta: { title: '社团新闻管理' },
                 },
                 {
+                    path: '/myClubNews',
+                    component: resolve => require(['../components/page/clubnews/stsy/clubnews.vue'], resolve),
+                    meta: { title: '我的社团新闻' },
+                },
+                {
                     path: '/chatroom',
                     component: resolve => require(['../components/page/chatRoom/chatRoom.vue'], resolve),
                     meta: { title: '系统聊天室' },
@@ -303,6 +313,18 @@ export default new Router({
                     path: '/clubUserInfo',
                     component: resolve => require(['../components/page/sysUser/sysUser.vue'], resolve),
                     meta: { title: '用户基本信息' },
+                },
+                //我的社团列表
+                {
+                    path: '/myClubList',
+                    component: resolve => require(['../components/page/myClubList/myClubList.vue'], resolve),
+                    meta: { title: '我的社团列表' },
+                },
+                //我的公告列表
+                {
+                    path: '/myClubnoticeList',
+                    component: resolve => require(['../components/page/clubNotice/stsy/clubNoticeList.vue'], resolve),
+                    meta: { title: '社团公告管理' },
                 },
             ]
         },

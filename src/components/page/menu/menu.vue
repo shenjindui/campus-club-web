@@ -6,6 +6,25 @@
                 <el-breadcrumb-item><i class="el-icon-lx-copy"></i> 菜单管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+        <!--角色选择器-->
+        <el-popover
+                placement="top"
+                width="1000"
+                trigger="click"
+                title="角色选择"
+                transition="fade-in-linear"
+                v-model="visible">
+            <el-table :data="roleListData" ref="roleListTable">
+                <el-table-column type="selection" width="28" align="center" ></el-table-column>
+                <el-table-column width="170" property="roleCode" label="角色编号"></el-table-column>
+                <el-table-column width="200" property="roleName" label="角色名称"></el-table-column>
+                <el-table-column width="300" property="uuid" label="角色UUID"></el-table-column>
+                <el-table-column width="300" property="createTime" label="创建时间"></el-table-column>
+            </el-table>
+            <el-button type="primary" icon="search" @click="comfirm()">确定</el-button>
+            <el-button type="primary" icon="search" @click="visible=false">取消</el-button>
+        </el-popover>
+        <!--角色选择器-->
         <div class="container">
             <el-tabs @tab-click="handleClick">
                 <el-tab-pane :label="`菜单列表(${pageParms.total})`" name="first" v-show="true">
@@ -21,25 +40,6 @@
                     <el-button type="primary" @click="handleClose()">确 定</el-button>
                      </span>
                     </el-dialog>
-                    <!--角色选择器-->
-                    <el-popover
-                            placement="top"
-                            width="1000"
-                            trigger="manual"
-                            title="角色选择"
-                            transition="fade-in-linear"
-                          v-model="visible">
-                        <el-table :data="roleListData" ref="roleListTable">
-                            <el-table-column type="selection" width="28" align="center" ></el-table-column>
-                            <el-table-column width="170" property="roleCode" label="角色编号"></el-table-column>
-                            <el-table-column width="200" property="roleName" label="角色名称"></el-table-column>
-                            <el-table-column width="300" property="uuid" label="角色UUID"></el-table-column>
-                            <el-table-column width="300" property="createTime" label="创建时间"></el-table-column>
-                        </el-table>
-                        <el-button type="primary" icon="search" @click="comfirm()">确定</el-button>
-                        <el-button type="primary" icon="search" @click="visible=false">取消</el-button>
-                    </el-popover>
-                    <!--角色选择器-->
                     <template v-if="message === 'first'">
                         <div class="handle-box">
                             <el-select v-model="params.statusCd" placeholder="菜单状态" class="handle-select mr10">

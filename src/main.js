@@ -1,68 +1,90 @@
+/**
+ * 根据规则读取项目目录下 node_modules 包里的包
+ */
 import Vue from 'vue'
+/**
+ * 引用app.vue
+ */
 import App from './App.vue'
+/**
+ * 读取项目目录下路由
+ */
 import router from './router'
+/**
+ * 读取项目目录下基于promise的 HTTP库
+ */
 import axios from 'axios';
-import layer from 'vue-layer'
+import layer from 'vue-layer';
+/**
+ * 引用饿了吗ElementUI的UI
+ */
 import ElementUI from 'element-ui';
-//引入表单验证组件
+/**
+ * 引用使用哪个主题作为项目的主题
+ */
 import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import "babel-polyfill";
 import SlideVerify from 'vue-monoplasty-slide-verify';
+/**
+ * 引用element-ui中的加载效果组件
+ */
 import Loading  from 'element-ui';
-import common from "./utils/common/common";//事件格式化
-import dateFormate from "./utils/dateFormate/dateFormate";//事件格式化
+/**
+ * 引用通用的格式化js 文件
+ */
+import common from "./utils/common/common";
+/**
+ * 引用通用的时间转换js 文件
+ */
+import dateFormate from "./utils/dateFormate/dateFormate";
 Vue.prototype.dateFormate = dateFormate;
 Vue.prototype.common = common;
 Vue.use(Loading)
 Vue.use(SlideVerify);
-//将引入的组件注册为全局Vue组件
+/**
+ * 将引入的组件注册为全局Vue组件
+ */
 Vue.use(ElementUI);
 Vue.prototype.$layer = layer(Vue)
-/* 或写为
- * Vue.use(Button)
- * Vue.use(Select)
- */
-
 Vue.config.productionTip = false
 Vue.use(ElementUI, {
     size: 'small'
 });
-
-//在main.js设置全局的请求次数，请求的间隙
+/**
+ * 设置全局的请求次数，请求的间隙
+ * @type {number}
+ */
 axios.defaults.retry = 2;//设置请求失败重新请求的次数
 axios.defaults.retryDelay = 1000;
 axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
     var config = err.config;
-    // If config does not exist or the retry option is not set, reject
     if(!config || !config.retry) return Promise.reject(err);
-    // Set the variable for keeping track of the retry count
     config.__retryCount = config.__retryCount || 0;
-    // Check if we've maxed out the total number of retries
     if(config.__retryCount >= config.retry) {
-        // Reject with the error
         return Promise.reject(err);
     }
-    // Increase the retry count
     config.__retryCount += 1;
-    // Create new promise to handle exponential backoff
     var backoff = new Promise(function(resolve) {
         setTimeout(function() {
             resolve();
         }, config.retryDelay || 1);
     });
-    // Return the promise in which recalls axios to retry the request
     return backoff.then(function() {
         return axios(config);
     });
 });
-//后端访问的路径
+/**
+ * 设置后端的访问地址
+ * @type {string}
+ */
 axios.default.baseURL = 'http://localhost:8889'
 Vue.prototype.$axios = axios;
-
-//使用钩子函数对路由进行权限跳转
+/**
+ * 使用钩子函数对路由进行权限跳转
+ */
 router.beforeEach((to, from, next) => {
     //这边可以用match()来判断所有需要权限的路径，to.matched.some(item => return item.meta.loginRequire)
     next();

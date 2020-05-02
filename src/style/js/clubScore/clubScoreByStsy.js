@@ -176,7 +176,6 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
@@ -309,7 +308,7 @@ export default {
                         schoolYear: this.params.schoolYear,
                         stCd: this.params.stCd,
                         ratersPsccd:ratersPsccd,
-                       /* ratersType:"ratersType1",*/
+                        ratersType:"ratersType1",
                         paramsTime: this.params.paramsTime,
                         userCode:store.fetchIDlist("userInfo").userCode,
                         currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
@@ -504,7 +503,7 @@ export default {
                 .post("/api/scorelist", {
                     ratersPsccd:ratersPsccd,
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    /*ratersType:"ratersType1",*/
+                    ratersType:"ratersType1",
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

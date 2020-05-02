@@ -1,59 +1,16 @@
-//引入存储数据的js
+/**
+ * 引入存储数据的js
+ */
 import store from "../../../store/store";
-//引入表单验证
-//import { validateLen, validateChart_ } from '../../../utils/validate/validate'
 export default {
-
     name: 'tabs',
     data() {
         return {
             message: 'first',
             showHeader: false,
-            ListData:[],
-            pageParms:[
-                {total:''}
-            ],
-            params:[],
-            statusCds:[],
-            dialogVisible: false,
-            errorMessage:'',
-            /* //添加对话框初始化*/
-            dialogTableVisible: false,
-            dialogFormVisible: false,
-            addForm: {
-                workFlowName: '',
-                workflowDesc:''
-            },
-            //详情对话框
-            detailFormVisible:false,
-            detailForm:{
-                workFlowCode: '',
-                uuid:'',
-                workFlowName: '',
-                workFlowDesc:'',
-                createTime:'',
-                updateTime:'',
-            },
-            //修改对话框
-            updateFormVisible: false,
-            updateForm: {
-                workflowDesc: '',
-                workFlowName:'',
-                workFlowCode:'',
-                uuid:''
-
-            },
-            formLabelWidth: '120px',
-            sexCds:[
-                {
-                    value: '1',
-                    dctValNm: '男'
-                },
-                {
-                    value: '0',
-                    dctValNm: '女'
-                }
-            ],
+            /**
+             * 时间控件初始化
+             */
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -81,6 +38,68 @@ export default {
                     }
                 }]
             },
+            /**
+             * table列表值
+             */
+            ListData:[],
+            /**
+             * 分页参数
+             */
+            pageParms:[
+                {total:''}
+            ],
+            /**
+             * 查询参数
+             */
+            params:[],
+            /**
+             *
+             */
+            statusCds:[],
+            /**
+             * 系统500时弹出框
+             */
+            dialogVisible: false,
+            errorMessage:'',
+            /**
+             * 添加对话框初始化
+             */
+            dialogTableVisible: false,
+            dialogFormVisible: false,
+            addForm: {
+                workFlowName: '',
+                workflowDesc:''
+            },
+            /**
+             * 详情对话框初始化
+             */
+            detailFormVisible:false,
+            detailForm:{
+                workFlowCode: '',
+                uuid:'',
+                workFlowName: '',
+                workFlowDesc:'',
+                createTime:'',
+                updateTime:'',
+            },
+            /**
+             * 修改对话框初始化
+             */
+            updateFormVisible: false,
+            updateForm: {
+                workflowDesc: '',
+                workFlowName:'',
+                workFlowCode:'',
+                uuid:''
+
+            },
+            /**
+             * 设置el-form-item 的长度
+             */
+            formLabelWidth: '120px',
+            /**
+             * 表单提交的校验
+             */
             rules: {
                 workFlowName: [
                     { required: true, message: "请输入流程名称", trigger: "blur" }
@@ -95,42 +114,56 @@ export default {
                 parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
 
             },
-            parentMenuCodes:[],
-
-            //分页参数设置
+            /**
+             * 分页参数设置
+             */
             currentPage:'',
             pageSize:'',
-
-            //生效失效按钮的显影
+            /**
+             * 生效失效按钮的显影初始化
+             */
             isStatus:true,
-
         }
     },
     created () {
         this.init();
-        //
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
-        //
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
-
+        /**
+         * 修改取消事件
+         * @param updateForm
+         * @constructor
+         */
         UpdateCancle(updateForm){
             this.$refs[updateForm].resetFields();
             this.updateFormVisible=false;
         },
-        //添加菜单取消操作时，重置表单的值
+        /**
+         * 添加取消操作时，重置表单的值
+         * @param addForm
+         * @constructor
+         */
         AddCancle(addForm){
             this.$refs[addForm].resetFields();
             this.dialogFormVisible=false;
         },
+        /**
+         * 详情取消操作时，重置表单的值
+         * @param detailForm
+         * @constructor
+         */
         DetailCancle(detailForm){
             this.$refs[detailForm].resetFields();
             this.detailFormVisible=false;
         },
+        /**
+         * 添加事件
+         * @param addForm
+         * @constructor
+         */
         Add(addForm){
             this.$refs[addForm].validate(valid => {
                 if (valid) {
@@ -141,7 +174,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -167,59 +200,27 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
-        //对话框确定按钮
+        /**
+         * 后台500对话框确定事件
+         */
         handleClose() {
             this.dialogVisible=false;
-            store.saveIDlist("token",null);
-            this.$router.push("/");
+            //store.saveIDlist("token",null);
+           // this.$router.push("/");
         },
-        //对状态进行翻译
-        formateStatus: function (row, column) {
-            switch(row.statusCd){
-                case 0:
-                    return '失效';
-                    break;
-                case 1:
-                    return '生效';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
-        },
+        /**
+         * 重置事件
+         */
         reset(){
             this.params={}
-        },//重置事件，将参数置空
+        },
+        /**
+         * 搜索事件
+         */
         search(){
             this.$axios
                 .post("/api/workflowList", {
@@ -231,7 +232,7 @@ export default {
                     pageSize:store.fetchIDlist("pageSize")
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -252,10 +253,12 @@ export default {
                     }
                 })
                 .catch(failResponse => {});
-        }, //搜索按钮事件
+        },
+        /**
+         * 修改编辑事件
+         */
         edit(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -272,7 +275,7 @@ export default {
                         uuid: selectData[0].uuid,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -294,9 +297,11 @@ export default {
                     .catch(failResponse => {});
             }
         },
+        /**
+         * 删除事件
+         */
         deletes(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -313,14 +318,13 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    //确定删除进行删除
                     this.$axios
                         .post("/api/workflowDelete", {
                             uuid: selectData[0].uuid,
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -352,9 +356,12 @@ export default {
 
             }
         },
+        /**
+         * 失效或生效事件
+         * @param status
+         */
         setStatus(status){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -371,7 +378,6 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    //确定删除进行删除
                     this.$axios
                         .post("/api/workflowStatus", {
                             uuid: selectData[0].uuid,
@@ -379,7 +385,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -411,14 +417,11 @@ export default {
 
             }
         },
-        dateformats: function (date) {
-            var date = new Date(date).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-        },
+        /**
+         * 详情事件
+         */
         detail(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -437,14 +440,13 @@ export default {
                         uuid: selectData[0].uuid,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
-                            console.log(successResponse.data.data)
                             this.detailForm=successResponse.data.data;
-                            this.detailForm.createTime=this.dateformats(this.detailForm.createTime);
-                            this.detailForm.updateTime=this.dateformats(this.detailForm.updateTime);
+                            this.detailForm.createTime=this.dateFormate.dateformat(this.detailForm.createTime);
+                            this.detailForm.updateTime=this.dateFormate.dateformat(this.detailForm.updateTime);
                             this.detailFormVisible=true;
                         }
                         if (successResponse.data.status === 400) {
@@ -458,15 +460,20 @@ export default {
 
                         }
                     })
-                    .catch(failResponse => {});
+                    .catch(failResponse => {
+
+                    });
             }
         },
+        /**
+         * 页面加载初始化
+         */
         init(){
             this.$axios
                 .post("/api/workflowList", {
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -487,7 +494,9 @@ export default {
                         this.dialogVisible=true;
                     }
                 })
-                .catch(failResponse => {});
+                .catch(failResponse => {
+
+                });
         },
         handleSelectionChange(){
             this.isStatus=true;
@@ -498,41 +507,35 @@ export default {
         },
         //tab切换
         handleClick(tab, event) {
-            console.log(tab, event);
             if(tab.name == 'first'){
-                // 触发‘菜单列表’事件
-                //  this.init();
             }else if(tab.name=='second'){
-                // 触发‘用户管理’事件
-                this.second();
             }else if(tab.name=='third'){
-                this.third();
             }
         },
-        second(){
-            alert('2222');
-            console.log('我是配置管理');
-        },
-        third(){
-            alert('2222');
-            console.log('我是配置管理');
-        },
+        /**
+         * 添加事件，弹框
+         */
         add(){
             this.dialogFormVisible = true;
         },
+        /**
+         * 修改事件
+         * @param updateForm
+         * @constructor
+         */
         Update(updateForm){
             this.$refs[updateForm].validate(valid => {
                 if (valid) {
                     this.$axios
                         .post("/api/workflowpdate", {
                             workFlowName:this.updateForm.workFlowName,
-                            workFlowCode: this.updateForm.workFlowCode,//
+                            workFlowCode: this.updateForm.workFlowCode,
                             workflowDesc: this.updateForm.workflowDesc,
                             uuid:this.updateForm.uuid,
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -556,22 +559,27 @@ export default {
                             if (successResponse.data.status === 500) { //后台异常时
                             }
                         })
-                        .catch(failResponse => {});
+                        .catch(failResponse => {
+
+                        });
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
-        //分页事件 页面尺寸事件
+        /**
+         * 分页事件 页面尺寸事件
+         * @param val
+         */
         handleSizeChange(val){
             store.saveIDlist("pageSize",val);
             this.search();
         },
-        // /页面当前页
+        /**
+         * 页面当前页
+         * @param val
+         */
         handleCurrentChange(val){
-            // alert(val);
-            //this.currentPage=val;
             store.saveIDlist("currentPage",val);
             this.search();
         },

@@ -7,7 +7,7 @@ export default {
     name: 'tabs',
     data() {
         return {
-            ratersPsccd: '0',
+            ratersPsccd: '1',
             showHeader: false,
             pickerOptions: {
                 shortcuts: [{
@@ -125,7 +125,7 @@ export default {
 
     },
     created () {
-        this.init("0");
+        this.init("1");
         //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
@@ -224,53 +224,6 @@ export default {
             this.params={
             };
             this.search(ratersPsccd);
-        },
-        add(){
-            this.dialogFormVisible = true;
-            this.initDdct();
-        },
-        Add(addForm){
-            this.$refs[addForm].validate(valid => {
-                if (valid) {
-                    this.$axios
-                        .post("/api/scoreadd", {
-                            stCd: this.addForm.stCd,
-                            schoolYear: this.addForm.schoolYear,
-                            emesters: this.addForm.semesters,
-                            userCode:store.fetchIDlist("userInfo").userCode
-                        },{headers: {
-                                'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
-                            }})
-                        .then(successResponse => {
-                            if (successResponse.data.status === 200) {
-                                let successMessage = successResponse.data.description;
-                                this.$message({
-                                    message: successMessage,
-                                    top:200,
-                                    type: 'success',
-
-                                })
-                                this.dialogFormVisible=false;
-                                this.init('0');
-                            }
-                            if (successResponse.data.status === 400) {
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                            if (successResponse.data.status === 500) { //后台异常时
-                            }
-                        })
-                        .catch(failResponse => {});
-                } else {
-                    //alert('error');
-                    console.log("error submit!!");
-                    return false;
-                }
-            });
         },
         initDdct(){
             this.$axios
@@ -456,10 +409,6 @@ export default {
         third(){
             alert('2222');
             console.log('我是配置管理');
-        },
-        AddCancle(addForm){
-            this.$refs[addForm].resetFields();
-            this.dialogFormVisible=false;
         },
         //分页事件 页面尺寸事件
         handleSizeChange(ratersPsccd,val){

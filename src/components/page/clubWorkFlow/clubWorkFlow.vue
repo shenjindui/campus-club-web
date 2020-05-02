@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -7,7 +6,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-tabs @tab-click="handleClick"><!--v-model="menu">-->
+            <el-tabs @tab-click="handleClick">
                 <el-tab-pane :label="`工作流列表(${pageParms.total})`" name="first" v-show="true">
                     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
                         <span >{{errorMessage}}</span>
@@ -15,20 +14,18 @@
                     <el-button @click="dialogVisible = false">取 消</el-button>
                     <el-button type="primary" @click="handleClose()">确 定</el-button>
                      </span>
-                    </el-dialog><!--//判断token是否过期合法的对话框-->
-
+                    </el-dialog>
                     <template v-if="message === 'first'">
                         <div class="handle-box">
-                           <!-- {{statusCds}}-->
-                            <el-select v-model="params.statusCd" placeholder="工作流状态" class="handle-select mr10">
+                            <el-select v-model.trim="params.statusCd" placeholder="工作流状态" class="handle-select mr10">
                                 <el-option
                                         v-for="item in statusCds"
                                         :key="item.dctVal"
                                         :label="item.dctValNm"
                                         :value="item.dctVal"/>
                             </el-select>
-                            <el-input  placeholder="工作流编号" class="handle-input mr10" v-model="params.workFlowCode"></el-input>
-                            <el-input  placeholder="工作流名称" class="handle-input mr10" v-model="params.workFlowName"></el-input>
+                            <el-input  placeholder="工作流编号" class="handle-input mr10" v-model.trim="params.workFlowCode"></el-input>
+                            <el-input  placeholder="工作流名称" class="handle-input mr10" v-model.trim="params.workFlowName"></el-input>
                             <el-date-picker
                                     v-model="params.paramsTime"
                                     type="datetimerange"
@@ -41,7 +38,7 @@
                             </el-date-picker>
                             <el-button type="primary" icon="search" @click="search()">搜索</el-button>
                             <el-button type="primary" icon="reset" @click="reset()">重置</el-button>
-                        </div>  <!--搜索条件-->
+                        </div>
 
                         <div class="handle-box">
                             <el-button type="primary" icon="search" @click="add()" plain>新增</el-button>
@@ -58,17 +55,16 @@
                                 <el-table-column prop="uuid" label="工作流UUID" width="180" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="workFlowCode" label="工作流编号" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="workFlowName" label="工作流名称" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
-                                <el-table-column prop="statusCd" :formatter="formateStatus" label="工作流状态" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="statusCd" :formatter="common.formateStatus" label="工作流状态" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="workFlowDesc" label="工作流描述" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="createUser"  label="创建人" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="updateUser"  label="更新人" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间"  align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间"  align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
-                        </div>   <!--列表组件table-->
+                        </div>
 
                         <div class="pagination">
-                            <!-- :current-page="currentPage4"-->
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
@@ -77,7 +73,7 @@
                                     layout="total, sizes, prev, pager, next, jumper"
                                     :total="pageParms.total">
                             </el-pagination>
-                        </div>  <!--分页器组件-->
+                        </div>
 
                         <el-dialog title="工作流详情" :visible.sync="detailFormVisible" @close="DetailCancle('detailForm')">
                             <el-form :model="detailForm" ref="detailForm" >

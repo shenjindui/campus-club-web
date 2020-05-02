@@ -1,9 +1,6 @@
 //引入存储数据的js
 import store from "../../../store/store";
-//引入表单验证
-//import { validateLen, validateChart_ } from '../../../utils/validate/validate'
 export default {
-
     name: 'tabs',
     data() {
         return {
@@ -454,9 +451,10 @@ export default {
         init(){
             this.$axios
                 .post("/api/messageslist", {
+                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                 }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {

@@ -81,59 +81,6 @@
                                     :total="pageParms.total">
                             </el-pagination>
                         </div>
-                       <!-- <el-dialog title="添加财务信息" :visible.sync="dialogFormVisible" @close="AddCancle('addForm')">
-                            <el-form :model="addForm" ref="addForm" :rules="rules">
-                                <el-row :gutter="16" type="flex">
-                                    <el-col :span="11">
-                                        <el-form-item label="财务操作类型" :label-width="formLabelWidth"  prop="type">
-                                           &lt;!&ndash; <el-input v-model.trim="addForm.type" placeholder="财务操作类型" clearable></el-input>&ndash;&gt;
-                                            <el-select v-model="addForm.type" placeholder="财务操作类型" class="handle-select mr10">
-                                                <el-option
-                                                        v-for="item in fundstypeList"
-                                                        :key="item.dctVal"
-                                                        :label="item.dctValNm"
-                                                        :value="item.dctVal"/>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="11">
-                                        <el-form-item label="所属社团编号" :label-width="formLabelWidth" prop="stCd">
-                                            &lt;!&ndash;<el-input v-model.trim="addForm.stCd" placeholder="所属社团编号" clearable></el-input>&ndash;&gt;
-                                            <el-select v-model="addForm.stCd" placeholder="请选择社团" required="required">
-                                                <el-option
-                                                        v-for="item in stList"
-                                                        :key="item.stCd"
-                                                        :label="item.stName"
-                                                        :value="item.stCd"/>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
-                                <el-row :gutter="16" type="flex">
-                                    <el-col :span="11">
-                                        <el-form-item label="金额" :label-width="formLabelWidth" prop="amount">
-                                            <el-input v-model="addForm.amount" placeholder="金额" clearable ></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col :span="11">
-                                        <el-form-item label="金额类型" :label-width="formLabelWidth" prop="amountType">
-                                            &lt;!&ndash;<el-input v-model="addForm.amountType" placeholder="金额类型" clearable ></el-input>&ndash;&gt;
-                                            <el-select v-model="addForm.amountType" placeholder="财务操作类型" class="handle-select mr10">
-                                                <el-option
-                                                        v-for="item in amountTypeList"
-                                                        :key="item.dctVal"
-                                                        :label="item.dctValNm"
-                                                        :value="item.dctVal"/>
-                                            </el-select>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
-                            </el-form>
-                            <div slot="footer" class="dialog-footer">
-                                <el-button @click="AddCancle('addForm')">取 消</el-button>
-                                <el-button type="primary" @click="Add('addForm')" plain>确 定</el-button>
-                            </div>
-                        </el-dialog>-->
                         <el-dialog title="反馈留言信息详情" :visible.sync="detailFormVisible" @close="DetailCancle('detailForm')">
                             <el-form :model="detailForm" ref="detailForm" >
                                 <el-row :gutter="16" type="flex">
@@ -289,6 +236,6 @@
 <script src="../../../style/js/clubMessage/clubMessage.js">
 </script>
 <style scoped>
-    @import '../../../style/csss/common/common.css';/* 引入css文件*/
+    @import '../../../style/csss/common/common.css';
 </style>
 

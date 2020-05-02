@@ -263,6 +263,7 @@ export default {
                         fundsCd: this.params.fundsCd,
                         stCd: this.params.stCd,
                         paramsTime: this.params.paramsTime,
+                        stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                         currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                         pageSize:store.fetchIDlist("pageSize")
                     },{headers: {
@@ -501,6 +502,7 @@ export default {
         init(){
             this.$axios
                 .post("/api/fundslist", {
+                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

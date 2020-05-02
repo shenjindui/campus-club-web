@@ -22,6 +22,10 @@ export default {
                 stDesc:''
             },
             params:[],
+            /**
+             * 设置el-form-item 的长度
+             */
+            formLabelWidth: '120px',
         }
     },
     created () {
@@ -31,8 +35,6 @@ export default {
         store.saveIDlist("currentPage",null);
         //
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
         dateformat: function (date) {
@@ -40,72 +42,6 @@ export default {
             return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
             replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
         },
-        alerts(){
-            this.$message({
-                message: "你已经提交申请,请不要重复提交",
-                type: 'warning'
-            })
-        },
-        join(stCd){
-            this.$axios
-                .post("/api/joinclub", {
-                    stCd: stCd,
-                    userCode:store.fetchIDlist("userInfo").userCode
-                },{headers: {
-                        'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
-                    }})
-                .then(successResponse => {
-                    if (successResponse.data.status === 200) {
-                        this.$message({
-                            message: "申请成功",
-                            type: 'success'
-                        })
-                    }
-                    if (successResponse.data.status === 400) {
-                        let warnMessage = successResponse.data.description;
-                        this.$message({
-                            message: warnMessage,
-                            type: 'warning'
-                        })
-                    }
-                    if (successResponse.data.status === 500) { //后台异常时
-
-                    }
-                })
-                .catch(failResponse => {});
-        },
-        search(){
-            this.$axios
-                .post("/api/clublist", {
-                    stCd: this.params.stCd,
-                },{headers: {
-                        'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
-                    }})
-                .then(successResponse => {
-                    if (successResponse.data.status === 200) {
-                        this.stMembers=successResponse.data.data.grid.list;
-                    }
-                    if (successResponse.data.status === 400) {
-                        let warnMessage = successResponse.data.description;
-                        this.$message({
-                            message: warnMessage,
-                            type: 'warning'
-                        })
-                    }
-                    if (successResponse.data.status === 500) { //后台异常时
-                        this.errorMessage =successResponse.data.description;
-                        let errorMessage = successResponse.data.description;
-                        this.$message({
-                            message: errorMessage,
-                            type: 'warning'
-                        })
-                        this.dialogVisible=true;
-                    }
-                })
-                .catch(failResponse => {});
-        }, //搜索按钮事件
         info(stCd){
             this.$axios
                 .post("/api/clubdetail", {
@@ -147,7 +83,8 @@ export default {
         },
         init(){
             this.$axios
-                .post("/api/clublist", {
+                .post("/api/clublistByStsy", {
+                    memberSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                     userCode:store.fetchIDlist("userInfo").userCode
                 },{headers: {
                         'content-type': 'application/json',
@@ -155,7 +92,7 @@ export default {
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        this.stMembers=successResponse.data.data.grid.list;
+                        this.stMembers=successResponse.data.data;
                     }
                     if (successResponse.data.status === 400) {
                         let warnMessage = successResponse.data.description;
@@ -181,11 +118,6 @@ export default {
             store.saveIDlist("token",null);
             this.$router.push("/");
         },
-        reset(){
-            let userInfo=store.fetchIDlist("userInfo");
-            this.init(userInfo.jobNum);
-            this.params={}
-        },//重置事件，将参数置空
         handleSelectionChange(){
             this.isStatus=true;
             const selectData=this.$refs.multipleTable.selection;

@@ -1,5 +1,5 @@
 //引入存储数据的js
-import store from "../../../store/store";
+import store from "../../../../store/store";
 //引入表单验证
 //import { validateLen, validateChart_ } from '../../../utils/validate/validate'
 export default {
@@ -38,60 +38,60 @@ export default {
             },
             value1: '',
             value2: '44444',
-            menuListData:[],
+            ListData:[],
             pageParms:[
                 {total:''}
             ],
+            addForm: {
+                type: '',
+                stCd: '',
+                amount: '',
+                amountType: '',
+            },
             params:[],
             statusCds:[],
             dialogVisible: false,
             errorMessage:'',
-            /* //添加对话框初始化*/
+           /* //添加对话框初始化*/
             dialogTableVisible: false,
             dialogFormVisible: false,
-            addForm: {
-                menuName: '',
-                url: '',
-                sort: '',
-                leafFlagCd: '',
-                parentMenuCode: '',
-                remark:''
-            },
             //详情对话框
             detailFormVisible:false,
             detailForm:{
-                menuName: '',
-                url: '',
-                sort: '',
-                leafFlagCd: '',
-                parentMenuCode: '',
-                remark:'',
+                uuid: '',
+                realname: '',
+                loginName: '',
+                userNum: '',
+                browserName: '',
+                browserVersion:'',
+                email:'',
+                loginIp:'',
+                mac: '',
+                osName:'',
                 createTime:'',
                 updateTime:''
             },
-            //修改对话框
             updateFormVisible: false,
             updateForm: {
-                menuName: '',
-                url: '',
-                sort: '',
-                leafFlagCd: '',
-                parentMenuCode: '',
-                remark:''
+                fundsCd: '',
+                uuid: '',
+                stCd: '',
+                type: '',
+                amount: '',
+                amountType:''
 
             },
             formLabelWidth: '120px',
-            yesOrNoCds:[
-                {
-                    value: '1',
-                    dctValNm: '是'
-                },
-                {
-                    value: '0',
-                    dctValNm: '否'
-                }
-            ],
-           /* rules: {
+
+            //分页参数设置
+            currentPage:'',
+            pageSize:'',
+
+            amountTypeList:[],
+            fundstypeList:[],
+            stList:[],
+            isStatus:true,
+            rules: {
                 menuName: [
                     { required: true, message: "请输入菜单名称", trigger: "blur" }
                 ],
@@ -104,66 +104,48 @@ export default {
                 leafFlagCd :[{ required: true, message: "请选择", trigger: "blur" }],
                 parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
 
-            },*/
-
-            //分页参数设置
-            currentPage:'',
-            pageSize:'',
-
-            //角色选择器
-            visible:false,
-            stListData:[],
-            // selectRoleCode:''
+            },
 
         }
     },
     created () {
         this.init();
-        //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
-        // store.saveIDlist("currentPage",val);
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
+        this.initDdct();
     },
     methods: {
+        DetailCancle(detailForm){
+            this.$refs[detailForm].resetFields();
+            this.detailFormVisible=false;
+        },
         //对话框确定按钮
         handleClose() {
-            this.dialogVisible=false;
-            store.saveIDlist("token",null);
+             this.dialogVisible=false;
+             store.saveIDlist("token",null);
             this.$router.push("/");
         },
-        //对状态进行翻译
-        formateClubStatus: function (row, column) {
-            switch(row.statusCd){
-                case 0:
-                    return '未生效';
-                    break;
-                case 1:
-                    return '生效';
-                    break;
-                case 2:
+        formateNoticeStatus: function (row, column) {
+            switch(row.noticeStatus){
+                case '0':
                     return '失效';
+                    break;
+                case '1':
+                    return '生效';
                     break;
                 default:
                     return '未知错误';
             }
         },
-        //对工作流状态翻译
-        workFlowStatus:function(row, column){
-            switch(row.workflowCd){
-                case 0:
-                    return '待审核';
+        //对状态进行翻译
+       formateStatus: function (row, column) {
+            switch(row.statusCd){
+                case '0':
+                    return '失效';
                     break;
-                case 1:
-                    return '审核中';
-                    break;
-                case 2:
-                    return '审核通过';
-                    break;
-                case 3:
-                    return '审核不通过';
+                case '1':
+                    return '生效';
                     break;
                 default:
                     return '未知错误';
@@ -194,28 +176,33 @@ export default {
             clock += ss;
             return (clock);
         },
+        dateformats: function (date) {
+            var date = new Date(date).toJSON();
+            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
+            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+        },
         reset(){
-            this.params={}
+            this.params={};
+            this.search();
         },//重置事件，将参数置空
         search(){
             this.$axios
-                .post("/api/clublist", {
-                    stCd: this.params.stCd,
-                    stName: this.params.stName,
-                    statusCd: this.params.statusCd,
-                    paramsTime: this.params.paramsTime,
-                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
-                    currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
-                    pageSize:store.fetchIDlist("pageSize")
-                },{headers: {
-                        'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
-                    }})
-                .then(successResponse => {
+                    .post("/api/clubNoticesLists", {
+                        noticeStatus: this.params.noticeStatus,
+                        noticeCd: this.params.noticeCd,
+                        paramsTime: this.params.paramsTime,
+                        stSySno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?
+                            store.fetchIDlist("userInfo").jobNum:null,
+                        currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
+                        pageSize:store.fetchIDlist("pageSize")
+                    },{headers: {
+                            'content-type': 'application/json',
+                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        }})
+                    .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data);
-                        this.stListData=[];
-                        this.stListData=successResponse.data.data.grid.list;
+                        this.ListData=[];
+                        this.ListData=successResponse.data.data.grid.list;
                         this.total='';
                         this.total=successResponse.data.data.grid.total;
                     }
@@ -238,21 +225,39 @@ export default {
                 })
                 .catch(failResponse => {});
         }, //搜索按钮事件
+        detail(){
+            const selectData=this.$refs.multipleTable.selection;
+            console.log(selectData[0])
+            if(selectData.length>1){
+                this.$message({
+                    message: "请最多选择一条",
+                    type: 'warning'
+                })
+            }else if(selectData.length<1) {
+                this.$message({
+                    message: "请选择一条记录",
+                    type: 'warning'
+                })
+            }
+            else
+               {this.$router.push({path:'/stsyClubNoticeinfo',query:{
+                           uuid:selectData[0].uuid}});
+            }
+        },
         init(){
             this.$axios
-                .post("/api/clublist", {
-                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
+                .post("/api/clubNoticesLists", {
+                    stSySno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?
+                        store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
-                    }})
+                }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
                         console.log(successResponse.data.data);
-                        this.stListData=[];
-                        this.stListData=successResponse.data.data.grid.list;
-                        //this.total='';
-                        //this.total=successResponse.data.data.grid.total;
+                        this.ListData=[];
+                        this.ListData=successResponse.data.data.grid.list;
                         this.pageParms.total=successResponse.data.data.grid.total;
                     }
                     if (successResponse.data.status === 400) {
@@ -269,26 +274,30 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        handleSelectionChange(){},
+        handleSelectionChange(){
+            this.isStatus=true;
+            const selectData=this.$refs.multipleTable.selection;
+            if(selectData[0].noticeStatus=='0'){
+                this.isStatus=false;
+            }
+        },
         //tab切换
         handleClick(tab, event) {
             console.log(tab, event);
             if(tab.name == 'first'){
                 // 触发‘菜单列表’事件
-                //  this.init();
+              //  this.init();
             }else if(tab.name=='second'){
                 // 触发‘用户管理’事件
                 this.second();
             }else if(tab.name=='third'){
-                this.third();
+                 this.third();
             }
         },
         second(){
-            alert('2222');
             console.log('我是配置管理');
         },
         third(){
-            alert('2222');
             console.log('我是配置管理');
         },
         //分页事件 页面尺寸事件
@@ -303,59 +312,6 @@ export default {
             store.saveIDlist("currentPage",val);
             this.search();
         },
-        detail(){
-            const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
-            if(selectData.length>1){
-                this.$message({
-                    message: "请最多选择一条",
-                    type: 'warning'
-                })
-            }else if(selectData.length<1) {
-                this.$message({
-                    message: "请选择一条记录",
-                    type: 'warning'
-                })
-            }else{
-                this.$router.push({path:'/clubApprovalInfo',query:{uuid:selectData[0].uuid}});
-            }
-        },
-        add(){
-            this.$router.push({path:'/clubApproval'});
-        },
-        edit(){
-            const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
-            if(selectData.length>1){
-                this.$message({
-                    message: "请最多选择一条",
-                    type: 'warning'
-                })
-            }else if(selectData.length<1) {
-                this.$message({
-                    message: "请选择一条记录",
-                    type: 'warning'
-                })
-            }else{
-                console.log(selectData[0])
-                if(selectData[0].statusCd==1){  //社团状态为0未生效
-                    this.$message({
-                        message: "该记录已生效，若要修改，请先申请生效，重新提交审核！",
-                        type: 'warning'
-                    })
-                }else{
-                    if(selectData[0].workflowCd==1||selectData[0].workflowCd==2){
-                        this.$message({
-                            message: "该记录处于流程中，不允许修改！",
-                            type: 'warning'
-                        })
-                    }else{
-                          this.$router.push({path:'/clubApprovalUpdate',query:{uuid:selectData[0].uuid}});
-                    }
-                }
-            }
-        }
-
     },
     computed: {
         unreadNum(){

@@ -1,11 +1,11 @@
-/**
- * 引入存储数据的js
- */
-import store from "../../../store/store";
+import store from "../../../../store/store";
 export default {
-    name: 'tabs',
+    name: 'news',
     data() {
         return {
+            editorOption: {
+                placeholder: '请输入公告内容'
+            },
             message: 'first',
             showHeader: false,
             /**
@@ -38,51 +38,82 @@ export default {
                     }
                 }]
             },
-            /**
-             * 列表数据对象
-             */
-            ListData:[],
-            /**
-             * 分页参数
-             */
+            value1: '',
+            value2: '44444',
+            newsListData:[],
             pageParms:[
                 {total:''}
             ],
             params:[],
-            /**
-             * 状态对象
-             */
+            clubList:[],
             statusCds:[],
             dialogVisible: false,
             errorMessage:'',
-            /**
-             * 添加对话框初始化
-             */
+           /* //添加对话框初始化*/
             dialogTableVisible: false,
             dialogFormVisible: false,
-            /**
-             * 详情对话框
-             */
+            addForm: {
+                newsTitle: '',
+                newsDesc: '',
+                newsStCd:''
+
+            },
+            //详情对话框
             detailFormVisible:false,
             detailForm:{
-                uuid: '',
-                className: '',
-                methodName: '',
-                operationCode: '',
-                userCode: '',
+                menuName: '',
+                url: '',
+                sort: '',
+                leafFlagCd: '',
+                parentMenuCode: '',
                 remark:'',
                 createTime:'',
                 updateTime:''
             },
-            /**
-             * 设置el-form-item 的长度
-             */
+            //修改对话框
+            updateFormVisible: false,
+            updateForm: {
+                newsStCd: '',
+                newsTitle: '',
+                newsDesc: '',
+                uuid: '',
+            },
             formLabelWidth: '120px',
-            /**
-             * 分页参数设置
-             */
+            yesOrNoCds:[
+                {
+                    value: '1',
+                    dctValNm: '是'
+                },
+                {
+                    value: '0',
+                    dctValNm: '否'
+                }
+            ],
+            rules: {
+                menuName: [
+                    { required: true, message: "请输入菜单名称", trigger: "blur" }
+                ],
+                url: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
+                sort: [{ required: true, message: "请输入菜单排序码", trigger: "blur" },
+                       { type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
+                            return Number(value);
+                        }}
+                ],
+                leafFlagCd :[{ required: true, message: "请选择", trigger: "blur" }],
+                parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
+
+            },
+            parentMenuCodes:[],
+
+            //分页参数设置
             currentPage:'',
             pageSize:'',
+
+            //角色选择器
+            visible:false,
+            roleListData:[],
+            selectMenuData:[],
+            isStatus:true,
             /**
              * vue loading 加载效果
              */
@@ -91,54 +122,89 @@ export default {
     },
     created () {
         this.init();
-        store.saveIDlist("pageSize",null);//页面初始化清空分页参数
-        store.saveIDlist("currentPage",null);//页面初始化清空分页参数
+        this.clublistinit();
+        //页面初始化清空分页参数
+        store.saveIDlist("pageSize",null);
+        store.saveIDlist("currentPage",null);
+        // store.saveIDlist("currentPage",val);
         this.statusCds = store.fetchIDlist("statusCd");
         let token=store.fetchIDlist("token");
+        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
-        /**
-         * 详情点击取消按钮
-         * @param detailForm
-         */
-        menuDetailCancle(detailForm){
+        dateformat: function (row, column) {
+            let date = new Date(row.publishTime).toJSON();
+            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
+            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+        },
+        clublistinit(){
+            this.$axios
+                .post("/api/clublist", {
+
+                },{headers: {
+                        'content-type': 'application/json',
+                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                    }})
+                .then(successResponse => {
+                    if (successResponse.data.status === 200) {
+                        console.log(successResponse.data.data);
+                        this.clubList=[];
+                        this.clubList=successResponse.data.data.grid.list;
+                    }
+                    if (successResponse.data.status === 400) {
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'warning'
+                        })
+                    }
+                    if (successResponse.data.status === 500) { //后台异常时
+                        this.errorMessage =successResponse.data.description;
+                        this.dialogVisible=true;
+                    }
+                })
+                .catch(failResponse => {});
+        },
+        DetailCancle(detailForm){
             this.$refs[detailForm].resetFields();
             this.detailFormVisible=false;
+            this.init();
         },
-        /**
-         * 后台500弹出框确认函数
-         */
         handleClose() {
              this.dialogVisible=false;
-            // store.saveIDlist("token",null);
-            //this.$router.push("/");
+             store.saveIDlist("token",null);
+            this.$router.push("/");
         },
-        /**
-         * 重置按钮事件
-         */
+        handleSelectionChange(){
+            this.isStatus=true;
+            const selectData=this.$refs.multipleTable.selection;
+            if(selectData[0].newsStatus==0){
+                this.isStatus=false;
+            }
+        },
         reset(){
             this.params={};
             this.search();
-        },
-        /**
-         * 搜索事件
-         */
+        },//重置事件，将参数置空
         search(){
             this.loading = true;
             this.$axios
-                    .post("/api/operationLoglist", {
-                        userCode: this.params.userCode,
+                    .post("/api/clubNewsLists", {
+                        newsCd: this.params.newsCd,
+                        newsStatus: '1',
                         paramsTime: this.params.paramsTime,
+                        stSySno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                         currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                         pageSize:store.fetchIDlist("pageSize")
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")
+                            "token":store.fetchIDlist("token")  //token换成从缓存获取
                         }})
                     .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        this.ListData=[];
-                        this.ListData=successResponse.data.data.grid.list;
+                        console.log(successResponse.data.data);
+                        this.newsListData=[];
+                        this.newsListData=successResponse.data.data.grid.list;
                         this.total='';
                         this.total=successResponse.data.data.grid.total;
                         this.loading = false;
@@ -161,82 +227,7 @@ export default {
                     }
                 })
                 .catch(failResponse => {});
-        },
-        /**
-         * 删除按钮事件
-         */
-        deletes(){
-            this.loading = true;
-            const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
-            if(selectData.length>1){
-                this.$message({
-                    message: "请最多选择一条",
-                    type: 'warning'
-                })
-            }else if(selectData.length<1) {
-                this.$message({
-                    message: "请选择一条记录",
-                    type: 'warning'
-                })
-            }else{
-                this.$confirm('确定要删除该条数据, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    //确定删除进行删除
-                    this.$axios
-                        .post("/api/operationLogdelete", {
-                            uuid: selectData[0].uuid,
-                            flag:"0"
-                        },{headers: {
-                                'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")
-                            }})
-                        .then(successResponse => {
-                            if (successResponse.data.status === 200) {
-                                let successMessage = successResponse.data.description;
-                                this.$message({
-                                    message: successMessage,
-                                    type: 'success'
-                                })
-                                this.init();
-                            }
-                            if (successResponse.data.status === 400) {
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                            if (successResponse.data.status === 500) { //后台异常时
-                                this.errorMessage =successResponse.data.description;
-                                let errorMessage = successResponse.data.description;
-                                this.$message({
-                                    message: errorMessage,
-                                    type: 'warning'
-                                })
-                                this.dialogVisible=true;
-                            }
-                        })
-                        .catch(failResponse => {
-                            this.$message({
-                                message: "网络连接错误，请重试！",
-                                type: 'warning'
-                            })
-                        });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消'
-                    });
-                });
-            }
-        },
-        /**
-         * 详情按钮事件
-         */
+        }, //搜索按钮事件
         detail(){
             const selectData=this.$refs.multipleTable.selection;
             if(selectData.length>1){
@@ -253,17 +244,16 @@ export default {
             else
                {
                 this.$axios
-                    .post("/api/operationLogDetail", {
+                    .post("/api/newsdetail", {
                         uuid: selectData[0].uuid,
+                        userCode:store.fetchIDlist("userInfo").userCode,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")
+                            "token":store.fetchIDlist("token")  //token换成从缓存获取
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
                             this.detailForm=successResponse.data.data;
-                            this.detailForm.createTime=this.dateFormate.dateformat(this.detailForm.createTime);
-                            this.detailForm.updateTime=this.dateFormate.dateformat(this.detailForm.updateTime);
                             this.detailFormVisible=true;
                         }
                         if (successResponse.data.status === 400) {
@@ -274,33 +264,26 @@ export default {
                             })
                         }
                         if (successResponse.data.status === 500) { //后台异常时
-                            this.errorMessage =successResponse.data.description;
-                            let errorMessage = successResponse.data.description;
-                            this.$message({
-                                message: errorMessage,
-                                type: 'warning'
-                            })
-                            this.dialogVisible=true;
+
                         }
                     })
                     .catch(failResponse => {});
             }
         },
-        /**
-         * 页面加载初始化列表
-         */
         init(){
             this.loading = true;
             this.$axios
-                .post("/api/operationLoglist", {
+                .post("/api/clubNewsLists", {
+                    newsStatus: '1',
+                    stSySno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")
+                        "token":store.fetchIDlist("token")  //token换成从缓存获取
                 }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        this.ListData=[];
-                        this.ListData=successResponse.data.data.grid.list;
+                        this.newsListData=[];
+                        this.newsListData=successResponse.data.data.grid.list;
                         this.pageParms.total=successResponse.data.data.grid.total;
                         this.loading = false;
                     }
@@ -318,7 +301,6 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        handleSelectionChange(){},
         //tab切换
         handleClick(tab, event) {
             console.log(tab, event);
@@ -340,19 +322,15 @@ export default {
             alert('2222');
             console.log('我是配置管理');
         },
-        /**
-         * 分页事件 页面尺寸事件
-         * @param val
-         */
+        //分页事件 页面尺寸事件
         handleSizeChange(val){
             store.saveIDlist("pageSize",val);
             this.search();
         },
-        /**
-         * 页面当前页
-         * @param val
-         */
+        // /页面当前页
         handleCurrentChange(val){
+            // alert(val);
+            //this.currentPage=val;
             store.saveIDlist("currentPage",val);
             this.search();
         },

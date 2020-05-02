@@ -41,10 +41,11 @@ export default {
         },
 
         search(){
+            console.log(store.fetchIDlist("roleInfo").roleCode);
             this.$axios
                 .post("/api/clubMemberList", {
                     memberSno: this.params.memberSno,
-                    stChargeSno:store.fetchIDlist("userInfo").jobNum
+                    stChargeSno:store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -108,7 +109,7 @@ export default {
         init(jobNum){
             this.$axios
                 .post("/api/clubMemberList", {
-                    stChargeSno: jobNum,
+                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

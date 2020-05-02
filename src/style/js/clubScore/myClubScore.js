@@ -7,7 +7,7 @@ export default {
     name: 'tabs',
     data() {
         return {
-            ratersPsccd: '0',
+            ratersPsccd: '1',
             showHeader: false,
             pickerOptions: {
                 shortcuts: [{
@@ -125,7 +125,7 @@ export default {
 
     },
     created () {
-        this.init("0");
+        this.init("1");
         //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
@@ -134,53 +134,6 @@ export default {
         this.initDdct();
     },
     methods: {
-        UpdateCancle(updateForm){
-            this.$refs[updateForm].resetFields();
-            this.updateFormVisible=false;
-        },
-        Update(updateForm){
-            this.$refs[updateForm].validate(valid => {
-                if (valid) {
-                    this.$axios
-                        .post("/api/scoreupdate", {
-                            uuid:this.updateForm.uuid,
-                            score:this.updateForm.score,
-                            ratersPsccd:"ratersPsccd1",//设置成完成
-                            ratersOpin: this.updateForm.ratersOpin,
-                            userCode:store.fetchIDlist("userInfo").userCode
-                        },{headers: {
-                                'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
-                            }})
-                        .then(successResponse => {
-                            if (successResponse.data.status === 200) {
-                                let successMessage = successResponse.data.description;
-                                this.$message({
-                                    message: successMessage,
-                                    top:200,
-                                    type: 'success',
-
-                                })
-                                this.updateFormVisible=false;
-                                this.init("0");
-                            }
-                            if (successResponse.data.status === 400) {
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                            if (successResponse.data.status === 500) { //后台异常时
-                            }
-                        })
-                        .catch(failResponse => {});
-                } else {
-                    console.log("error submit!!");
-                    return false;
-                }
-            });
-        },
         DetailCancle(detailForm){
             this.$refs[detailForm].resetFields();
             this.detailFormVisible=false;
@@ -225,53 +178,6 @@ export default {
             };
             this.search(ratersPsccd);
         },
-        add(){
-            this.dialogFormVisible = true;
-            this.initDdct();
-        },
-        Add(addForm){
-            this.$refs[addForm].validate(valid => {
-                if (valid) {
-                    this.$axios
-                        .post("/api/scoreadd", {
-                            stCd: this.addForm.stCd,
-                            schoolYear: this.addForm.schoolYear,
-                            emesters: this.addForm.semesters,
-                            userCode:store.fetchIDlist("userInfo").userCode
-                        },{headers: {
-                                'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
-                            }})
-                        .then(successResponse => {
-                            if (successResponse.data.status === 200) {
-                                let successMessage = successResponse.data.description;
-                                this.$message({
-                                    message: successMessage,
-                                    top:200,
-                                    type: 'success',
-
-                                })
-                                this.dialogFormVisible=false;
-                                this.init('0');
-                            }
-                            if (successResponse.data.status === 400) {
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                            if (successResponse.data.status === 500) { //后台异常时
-                            }
-                        })
-                        .catch(failResponse => {});
-                } else {
-                    //alert('error');
-                    console.log("error submit!!");
-                    return false;
-                }
-            });
-        },
         initDdct(){
             this.$axios
                 .post("/api/scoreinit", {
@@ -312,6 +218,7 @@ export default {
                         ratersType:'ratersType1',
                         ratersAssociationCode:store.fetchIDlist("userInfo").jobNum,
                         paramsTime: this.params.paramsTime,
+                        userCode:store.fetchIDlist("userInfo").userCode,
                         currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                         pageSize:store.fetchIDlist("pageSize")
                     },{headers: {
@@ -505,6 +412,7 @@ export default {
                     ratersPsccd:ratersPsccd,
                     ratersType:'ratersType1',
                     ratersAssociationCode:store.fetchIDlist("userInfo").jobNum,
+                    userCode:store.fetchIDlist("userInfo").userCode
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

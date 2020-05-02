@@ -175,8 +175,8 @@ export default {
     },
     created () {
         this.init();
-        store.saveIDlist("pageSize",null);
-        store.saveIDlist("currentPage",null);
+        store.saveIDlist("pageSize",null);//页面初始化清空分页参数
+        store.saveIDlist("currentPage",null);//页面初始化清空分页参数
         this.statusCds = store.fetchIDlist("statusCd");
         let token=store.fetchIDlist("token");
     },
@@ -383,6 +383,7 @@ export default {
                                 type: 'success'
                             })
                             this.loading = false;
+                            this.params={};
                             this.search();
 
                         }
@@ -765,7 +766,7 @@ export default {
                         console.log(successResponse.data.data.grid.list);
                         this.roleListData=[];
                         this.roleListData=successResponse.data.data.grid.list;
-                        this.pageParms.total=successResponse.data.data.grid.total;
+                        //this.pageParms.total=successResponse.data.data.grid.total;
                         this.loading = false;
                     }
                     if (successResponse.data.status === 400) {

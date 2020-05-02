@@ -148,7 +148,7 @@ export default {
            clublistinit(){
             this.$axios
                 .post("/api/clublist", {
-
+                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -185,6 +185,7 @@ export default {
         DetailCancle(detailForm){
             this.$refs[detailForm].resetFields();
             this.detailFormVisible=false;
+            this.init();
         },
         //菜单添加回调函数
         Add(addForm){
@@ -304,6 +305,7 @@ export default {
                         newsCd: this.params.newsCd,
                         newsStatus: this.params.newsStatus,
                         paramsTime: this.params.paramsTime,
+                        stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                         currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                         pageSize:store.fetchIDlist("pageSize")
                     },{headers: {
@@ -390,7 +392,6 @@ export default {
         },
         edit(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -405,6 +406,7 @@ export default {
                 this.$axios
                     .post("/api/newsdetail", {
                         uuid: selectData[0].uuid,
+                        userCode:store.fetchIDlist("userInfo").userCode,
                     },{headers: {
                             'content-type': 'application/json',
                             "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -546,7 +548,6 @@ export default {
         },
         detail(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -563,6 +564,7 @@ export default {
                 this.$axios
                     .post("/api/newsdetail", {
                         uuid: selectData[0].uuid,
+                        userCode:store.fetchIDlist("userInfo").userCode,
                     },{headers: {
                             'content-type': 'application/json',
                             "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -590,6 +592,7 @@ export default {
         init(){
             this.$axios
                 .post("/api/clubnewslists", {
+                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

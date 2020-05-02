@@ -72,9 +72,8 @@
                           <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                       </el-input>
                   </el-form-item>
-
                   <div class="login-btn">
-                      <el-button type="primary" @click="next">下一步</el-button>
+                      <el-button type="primary" @click="next('forgotForm')">下一步</el-button>
                   </div>
                   <div class="login-btn-next">
                       <p class="login-text-fgt"><a href="javascript:void(0)" @click="user_back">已有账号返回登陆</a></p>
@@ -83,17 +82,21 @@
           </div> <!--忘记密码页面-->
           <div v-show="tab==4">
               <div>
-                  <slide-verify :l="42"
-                                  :r="10"
-                                  :w="350"
-                                  :h="155"
-                                  @success="onSuccess"
-                                  @fail="onFail"
+                  <slide-verify :l="42" :r="10" :w="380" :h="155" @success="onSuccess" @fail="onFail"
                                   @refresh="onRefresh"
-                                  :slider-text="text"
-                  ></slide-verify>
-                  <div>
+                                  :slider-text="text">
+                  </slide-verify>
+                 <!-- <div>
                       {{msg}}
+                  </div>-->
+                  <div>
+                      <el-input type="email" placeholder="请输入邮箱验证码" v-model="verificationCode" v-if="verificationCodeShow">
+                          <template slot="append">{{count}}</template>
+                      </el-input>
+                     <!-- <span v-if="verificationCodeShow" class="count"> </span>-->
+                  </div>
+                  <div class="login-btn">
+                      <el-button type="primary" @click="next2(verificationCode)">下一步</el-button>
                   </div>
               </div>
 
@@ -112,7 +115,7 @@
                       </el-input>
                   </el-form-item>
                   <div class="login-btn">
-                      <el-button type="primary" @click="reset()">提交重置</el-button>
+                      <el-button type="primary" @click="reset('resetForm')">提交重置</el-button>
                   </div>
                   <div class="login-btn-next">
                       <p class="login-text-fgt"><a href="javascript:void(0)" @click="user_back()">已有账号返回登陆</a></p>

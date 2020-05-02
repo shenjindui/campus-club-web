@@ -291,8 +291,8 @@ export default {
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
                             this.detailForm=successResponse.data.data;
-                            this.detailForm.createTime=this.dateformats(this.detailForm.createTime);
-                            this.detailForm.updateTime=this.dateformats(this.detailForm.updateTime);
+                            this.detailForm.createTime=this.dateFormate.dateformat(this.detailForm.createTime);
+                            this.detailForm.updateTime=this.dateFormate.dateformat(this.detailForm.updateTime);
                             this.detailFormVisible=true;
 
                         }

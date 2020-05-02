@@ -243,7 +243,7 @@ export default {
                     type: 'warning'
                 })
             }else{
-                this.$router.push({path:'/clubApproveInfo',query:{
+                this.$router.push({path:'/clubjb/clubApproveInfo',query:{
                         uuid:selectData[0].uuid}});
             }
         },

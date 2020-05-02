@@ -4,7 +4,7 @@
         <div class="collapse-btn" @click="collapseChage">
             <i class="el-icon-menu"></i>
         </div>
-        <div class="logo">【{{userInfo.realname}}】欢迎使用校园社团管理</div>
+        <div class="logo">【{{userInfo.realname}}】欢迎使用校园社团管理系统</div>
         <div class="header-right">
             <div class="header-user-con">
                 <!-- 全屏显示 -->
@@ -140,7 +140,7 @@
     }
     .header .logo{
         float: left;
-        width:350px;
+        width:450px;
         line-height: 70px;
     }
     .header-right{
