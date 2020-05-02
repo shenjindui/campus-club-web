@@ -11,28 +11,37 @@
 <script>
     export default {
         name: 'App',
-        provide () {    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
+        /**
+         * 父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
+         * @returns {{reload: default.methods.reload}}
+         */
+        provide () {
             return {
                 reload: this.reload
             }
         },
         data() {
             return{
-                isRouterAlive: true                    //控制视图是否显示的变量
+                /**
+                 * 控制视图是否显示的变量
+                 */
+                isRouterAlive: true
             }
         },
         methods: {
             reload () {
-                this.isRouterAlive = false;            //先关闭，
+                /**
+                 * 控制视图是否显示的变量，先关闭，再打开
+                 * @type {boolean}
+                 */
+                this.isRouterAlive = false;
                 this.$nextTick(function () {
-                    this.isRouterAlive = true;         //再打开
+                    this.isRouterAlive = true;
                 })
             }
         }
     }
 </script>
-
-
 <!--
 <template>
     <div id="app">

@@ -1,4 +1,9 @@
-/*是否合法IP地址*/
+/**
+ * 是否合法IP地址
+ * @param rule
+ * @param value
+ * @param callback
+ */
 export function validateIP(rule, value,callback) {
     if(value==''||value==undefined||value==null){
         callback();
@@ -12,7 +17,9 @@ export function validateIP(rule, value,callback) {
     }
 }
 
-/* 是否手机号码或者固话*/
+/**
+ * 是否手机号码或者固话
+ */
 export function validatePhoneTwo(rule, value, callback) {
     const reg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;;
     if (value == '' || value == undefined || value == null) {
@@ -25,7 +32,10 @@ export function validatePhoneTwo(rule, value, callback) {
         }
     }
 }
-/* 是否固话*/
+
+/**
+ * 是否固话
+ */
 export function validateTelphone(rule, value,callback) {
     const reg =/0\d{2}-\d{7,8}/;
     if(value==''||value==undefined||value==null){
@@ -38,7 +48,10 @@ export function validateTelphone(rule, value,callback) {
         }
     }
 }
-/* 是否手机号码*/
+
+/**
+ * 是否手机号码
+ */
 export function validatePhone(str) {
     const reg =/^[1][3,4,5,7,8][0-9]{9}$/;
     return reg.test(str);
@@ -63,23 +76,26 @@ export function validateWechat(str) {
     const reg =/^[a-zA-Z]{1}[-_a-zA-Z0-9]{5,19}$/;
     return reg.test(str);
 }
-/* 是否身份证号码*/
+
+/**
+ * 是否身份证号码
+ */
 export function validateIdNo(str) {
     const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
     return reg.test(str);
 }
-/* 是否邮箱*/
+
+/**
+ * 是否邮箱
+ */
 export function validateEMail(str) {
     const reg =/^([a-zA-Z0-9]+[-_\.]?)+@[a-zA-Z0-9]+\.[a-z]+$/;
     return reg.test(str);
 }
-/* 合法uri*/
-export function validateURL(textval) {
-    const urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
-    return urlregex.test(textval);
-}
 
-/*验证内容是否英文数字以及下划线*/
+/**
+ * 验证内容是否英文数字以及下划线
+ */
 export function isPassword(rule, value, callback) {
     const reg =/^[_a-zA-Z0-9]+$/;
     if(value==''||value==undefined||value==null){
@@ -93,7 +109,9 @@ export function isPassword(rule, value, callback) {
     }
 }
 
-/*自动检验数值的范围*/
+/**
+ * 自动检验数值的范围*
+ */
 export function checkMax20000(rule, value, callback) {
     if (value == '' || value == undefined || value == null) {
         callback();
@@ -106,7 +124,12 @@ export function checkMax20000(rule, value, callback) {
     }
 }
 
-//验证数字输入框最大数值,32767
+/**
+ * 验证数字输入框最大数值 32767
+ * @param rule
+ * @param value
+ * @param callback
+ */
 export function checkMaxVal(rule, value,callback) {
     if (value < 0 || value > 32767) {
         callback(new Error('请输入[0,32767]之间的数字'));
@@ -114,7 +137,14 @@ export function checkMaxVal(rule, value,callback) {
         callback();
     }
 }
-//验证是否1-99之间
+
+/**
+ * 验证是否1-99之间
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
 export function isOneToNinetyNine(rule, value, callback) {
     if (!value) {
         return callback(new Error('输入不可以为空'));
@@ -134,12 +164,22 @@ export function isOneToNinetyNine(rule, value, callback) {
     }, 0);
 }
 
-// 验证是否整数
+/**
+ *  验证是否整数
+ * @param str
+ * @returns {boolean}
+ */
 export function isInteger(str) {
     const reg = /^[0-9]*[1-9][0-9]*$/;
     return reg.test(str);
 }
-// 验证是否整数,非必填
+
+/**
+ * 验证是否整数,非必填
+ * @param rule
+ * @param value
+ * @param callback
+ */
 export function isIntegerNotMust(rule, value, callback) {
     if (!value) {
         callback();
@@ -159,7 +199,13 @@ export function isIntegerNotMust(rule, value, callback) {
     }, 1000);
 }
 
-// 验证是否是[0-1]的小数
+/**
+ * 验证是否是[0-1]的小数
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
 export function isDecimal(rule, value, callback) {
     if (!value) {
         return callback(new Error('输入不可以为空'));
@@ -177,7 +223,13 @@ export function isDecimal(rule, value, callback) {
     }, 100);
 }
 
-// 验证是否是[1-10]的小数,即不可以等于0
+/**
+ * 验证是否是[1-10]的小数,即不可以等于0
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
 export function isBtnOneToTen(rule, value, callback) {
     if (typeof value == 'undefined') {
         return callback(new Error('输入不可以为空'));
@@ -194,7 +246,14 @@ export function isBtnOneToTen(rule, value, callback) {
         }
     }, 100);
 }
-// 验证是否是[1-100]的小数,即不可以等于0
+
+/**
+ * 验证是否是[1-100]的小数,即不可以等于0
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
 export function isBtnOneToHundred(rule, value, callback) {
     if (!value) {
         return callback(new Error('输入不可以为空'));
@@ -211,7 +270,14 @@ export function isBtnOneToHundred(rule, value, callback) {
         }
     }, 100);
 }
-// 验证是否是[0-100]的小数
+
+/**
+ * 验证是否是[0-100]的小数
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
 export function isBtnZeroToHundred(rule, value, callback) {
     if (!value) {
         return callback(new Error('输入不可以为空'));
@@ -229,7 +295,13 @@ export function isBtnZeroToHundred(rule, value, callback) {
     }, 100);
 }
 
-// 验证端口是否在[0,65535]之间
+/**
+ * 验证端口是否在[0,65535]之间
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
 export function isPort(rule, value, callback) {
     if (!value) {
         return callback(new Error('输入不可以为空'));
@@ -248,7 +320,13 @@ export function isPort(rule, value, callback) {
         }
     }, 100);
 }
-// 验证端口是否在[0,65535]之间，非必填,isMust表示是否必填
+
+/**
+ * 验证端口是否在[0,65535]之间，非必填,isMust表示是否必填
+ * @param rule
+ * @param value
+ * @param callback
+ */
 export function isCheckPort(rule, value, callback) {
     if (!value) {
         callback();
@@ -268,42 +346,45 @@ export function isCheckPort(rule, value, callback) {
     }, 100);
 }
 
-/* 小写字母*/
+/**
+ * 小写字母
+ */
 export function validateLowerCase(str) {
     const reg = /^[a-z]+$/;
     return reg.test(str);
 }
-/*保留2为小数*/
+
+/**
+ * 保留2为小数
+ */
 export function validatetoFixedNew(str) {
     return str ;
 }
-/* 验证key*/
-// export function validateKey(str) {
-//     var reg = /^[a-z_\-:]+$/;
-//     return reg.test(str);
-// }
 
-/* 大写字母*/
+/**
+ * 大写字母
+ */
 export function validateUpperCase(str) {
     const reg = /^[A-Z]+$/;
     return reg.test(str);
 }
-
-/* 大小写字母*/
+/**
+ * 大小写字母
+ */
 export function validatAlphabets(str) {
     const reg = /^[A-Za-z]+$/;
     return reg.test(str);
 }
-
-/* 学号校验*/
-
+/**
+ * 学号校验
+ */
 export function isJobNum(str) {
     const reg = /^[1-9][0-9]{9}$/;
     return reg.test(str);
 }
-
-/*校验姓名*/
-
+/**
+ * 校验姓名
+ */
 export function checkRealName(str) {
     const reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;//验证姓名正则
     return reg.test(str);
