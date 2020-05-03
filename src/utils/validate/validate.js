@@ -386,6 +386,16 @@ export function isJobNum(str) {
  * 校验姓名
  */
 export function checkRealName(str) {
-    const reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;//验证姓名正则
+    const reg = /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,20}$/;
+    return reg.test(str);
+}
+
+/**
+ * 金额校验
+ * @param str
+ * @returns {boolean}
+ */
+export function checkBailPayMoney (str) {
+    const reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
     return reg.test(str);
 }

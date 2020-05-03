@@ -91,20 +91,19 @@ export default {
                     dctValNm: '否'
                 }
             ],
-           /* rules: {
-                menuName: [
-                    { required: true, message: "请输入菜单名称", trigger: "blur" }
-                ],
-                url: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
-                sort: [{ required: true, message: "请输入菜单排序码", trigger: "blur" },
-                    { type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
-                            return Number(value);
-                        }}
-                ],
-                leafFlagCd :[{ required: true, message: "请选择", trigger: "blur" }],
-                parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
-
-            },*/
+            /* rules: {
+                 menuName: [
+                     { required: true, message: "请输入菜单名称", trigger: "blur" }
+                 ],
+                 url: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
+                 sort: [{ required: true, message: "请输入菜单排序码", trigger: "blur" },
+                     { type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
+                             return Number(value);
+                         }}
+                 ],
+                 leafFlagCd :[{ required: true, message: "请选择", trigger: "blur" }],
+                 parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
+             },*/
 
             //分页参数设置
             currentPage:'',
@@ -242,7 +241,7 @@ export default {
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                       // console.log(successResponse.data.data);
+                        // console.log(successResponse.data.data);
                         this.activityListData=[];
                         this.activityListData=successResponse.data.data.grid.list;
                         this.pageParms.total=successResponse.data.data.grid.total;
@@ -342,7 +341,7 @@ export default {
                             type: 'warning'
                         })
                     }else{
-                          this.$router.push({path:'/clubApprovalUpdate',query:{uuid:selectData[0].uuid}});
+                        this.$router.push({path:'/clubActivityAdd',query:{uuid:selectData[0].uuid}});
                     }
                 }
             }
