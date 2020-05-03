@@ -1,5 +1,18 @@
 import store from "../../../store/store";
-
+import {
+    checkBailPayMoney
+} from "../../../utils/validate/validate"; //引入自定义的校验js
+const  checkIsBailPayMoney = (rule, value, callback) => {
+    if(!value){
+        return callback(new Error("活动资金不能为空"));
+    }else{
+        if (checkBailPayMoney(value)) {
+            callback();
+        }else{
+            return callback(new Error("活动资金格式不正确"));
+        }
+    }
+}
 export default {
     //强制刷新
     inject:['reload'],
@@ -7,18 +20,45 @@ export default {
         return {
             active: 0,
             baseInfoForm: {
-                schoolNo: '',
-                collegeNo: '',
-                stNature: '',
-                stName:'',
-                stDesc: '',
-                remark: '',
-                stChargeName:'',
-                stChargePhone:'',
+                activityName: '',
+                activitySpace: '',
+                activityType: '',
+                foundsNum:'',
+                startTime: '',
+                endTime: '',
+                activityDsc:'',
+                activityTime:'',
                 stChargeSno:'',
                 stCd:'',
                 uuid:''
-
+            },
+            formDate : [],
+            pickerOptions: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                        const end = new Date();
+                        const start = new Date();
+                        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                        picker.$emit('pick', [start, end]);
+                    }
+                }]
             },
             opinionForm:{
                 opinion:''
@@ -33,9 +73,13 @@ export default {
                 sysBusinessCode:''
             },
             rules: {
-                opinion: [
-                    { required: true, message: "请填写申请理由", trigger: "blur" }
-                ],
+                activityName: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
+                activitySpace: [{ required: true, message: "请输入活动地点", trigger: "blur" }],
+                activityType: [{ required: true, message: "请选择活动类型", trigger: "blur" }],
+                activityTime: [{ required: true, message: "请选择活动时间", trigger: "blur" }],
+                activityDsc: [{ required: true, message: "请输入活动内容", trigger: "blur" }],
+                foundsNum: [{ required: true, message: "请输入资金预算金额", trigger: "blur" },
+                    { validator: checkIsBailPayMoney ,trigger: "blur" }],
             },
 
             //工作流选择对话框
@@ -45,13 +89,14 @@ export default {
 
             //异常对话框
             dialogVisible:false,
-            errorMessage:''
+            errorMessage:'',
+            uuid:''
 
 
         };
     },
     created () {
-        //初始文件列表
+        this.init();
     },
     methods: {
         //对话框确定按钮
@@ -118,7 +163,6 @@ export default {
         },
         //文件上传失败调用的事件
         fileUploadError(err, file, fileList) {
-            console.log(file);
             alert('系统异常,上传失败！');
         },
         next() {
@@ -206,20 +250,16 @@ export default {
         },
         baseInfoSave(baseInfoForm){
             this.$refs[baseInfoForm].validate(valid => {
-                console.log(JSON.stringify(this.baseInfoForm))
                 if (valid) {
-                    console.log(JSON.stringify(baseInfoForm));
                     this.$axios
-                        .post("/api/clubAdd", {
-                            schoolNo:this.baseInfoForm.schoolNo,
-                            collegeNo:this.baseInfoForm.collegeNo,
-                            stNature:this.baseInfoForm.stNature,
-                            stName:this.baseInfoForm.stName,
-                            stDesc:this.baseInfoForm.stDesc,
-                            remark:this.baseInfoForm.remark,
-                            stChargeName:this.baseInfoForm.stChargeName,
-                            stChargePhone:this.baseInfoForm.stChargePhone,
-                            stChargeSno:this.baseInfoForm.stChargeSno,
+                        .post("/api/clubActivityAdd", {
+                            activityName:this.baseInfoForm.activityName,
+                            activitySpace:this.baseInfoForm.activitySpace,
+                            activityType:this.baseInfoForm.activityType,
+                            foundsNum:this.baseInfoForm.foundsNum,
+                            activityTime:this.formDate,
+                            activityDsc:this.baseInfoForm.activityDsc,
+                            uuid:this.hideParms.uuid!=''?this.hideParms.uuid:null,
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
@@ -272,19 +312,17 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
         opinionSave(opinionForm){  //申请理由保存
-            console.log(this.baseInfoForm.uuid)
             this.$refs[opinionForm].validate(valid => {
                 if (valid) {
                     this.$axios
-                        .post("/api/clubSetOpinion", {
-                            opinion:this.opinionForm.opinion,
+                        .post("/api/clubActivitySetOpinion", {
+                            remark:this.opinionForm.opinion,
+                            activityName:this.baseInfoForm.activityName,
                             uuid:this.baseInfoForm.uuid,
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
@@ -298,7 +336,6 @@ export default {
                                     message: successMessage,
                                     top:200,
                                     type: 'success',
-
                                 })
                             }
                             if (successResponse.data.status === 400) {
@@ -323,7 +360,7 @@ export default {
             });
         },
         back(){
-            this.$router.push("/clubinfo");
+            this.$router.push("/clubActivity");
         },
         startAndSubmit(opinionForm){
             if(this.hideParms.sysBusinessCode===''){
@@ -368,6 +405,37 @@ export default {
                     }
                 });
             }
+        },
+        init(){
+            this.$axios
+                .post("/api/clubActivityDetail", {
+                    uuid:this.$route.query.uuid,
+                },{headers: {
+                        'content-type': 'application/json',
+                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                    }})
+                .then(successResponse => {
+                    if (successResponse.data.status === 200) {
+                        this.baseInfoForm=successResponse.data.data;
+                        this.baseInfoForm.activityTime = successResponse.data.data.activityTime
+                        this.formDate = [successResponse.data.data.activityTime[0],successResponse.data.data.activityTime[1]]
+                        this.opinionForm.opinion=successResponse.data.data.createOpinion;
+                        this.hideParms.uuid=successResponse.data.data.uuid;
+                        this.hideParms.stCd=successResponse.data.data.stCd;
+                        this.getFileList();
+                    }
+                    if (successResponse.data.status === 400) {
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'warning'
+                        })
+                    }
+                    if (successResponse.data.status === 500) { //后台异常时
+                        this.errorMessage =successResponse.data.description;
+                    }
+                })
+                .catch(failResponse => {});
         },
         confirmAndSubmit(){  //提交审核确定按钮事件
             const selectData=this.$refs.approverListTable.selection;

@@ -224,6 +224,11 @@ export default new Router({
                     meta: { title: '社团活动管理' },
                 },
                 {
+                    path: '/clubActivityUpdate',
+                    component: resolve => require(['../components/page/clubActivity/clubActivityUpdate.vue'], resolve),
+                    meta: { title: '社团活动管理' },
+                },
+                {
                     path: '/clubMember',
                     component: resolve => require(['../components/page/clubMember/clubMember.vue'], resolve),
                     meta: { title: '社团人员管理' },

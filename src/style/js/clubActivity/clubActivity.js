@@ -316,7 +316,6 @@ export default {
         },
         edit(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -329,7 +328,7 @@ export default {
                 })
             }else{
                 console.log(selectData[0])
-                if(selectData[0].statusCd==1){  //社团状态为0未生效
+                if(selectData[0].statusCd==1){
                     this.$message({
                         message: "该记录已生效，若要修改，请先申请生效，重新提交审核！",
                         type: 'warning'
@@ -341,7 +340,7 @@ export default {
                             type: 'warning'
                         })
                     }else{
-                        this.$router.push({path:'/clubActivityAdd',query:{uuid:selectData[0].uuid}});
+                        this.$router.push({path:'/clubActivityUpdate',query:{uuid:selectData[0].uuid}});
                     }
                 }
             }

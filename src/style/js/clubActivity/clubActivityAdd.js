@@ -318,13 +318,13 @@ export default {
                 }
             });
         },
-        opinionSave(opinionForm){  //申请理由保存
-            console.log(this.baseInfoForm.uuid)
+        opinionSave(opinionForm){  //活动申请理由保存
             this.$refs[opinionForm].validate(valid => {
                 if (valid) {
                     this.$axios
-                        .post("/api/clubSetOpinion", {
-                            opinion:this.opinionForm.opinion,
+                        .post("/api/clubActivitySetOpinion", {
+                            activityName:this.baseInfoForm.activityName,
+                            remark:this.opinionForm.opinion,
                             uuid:this.baseInfoForm.uuid,
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
@@ -338,7 +338,6 @@ export default {
                                     message: successMessage,
                                     top:200,
                                     type: 'success',
-
                                 })
                             }
                             if (successResponse.data.status === 400) {
