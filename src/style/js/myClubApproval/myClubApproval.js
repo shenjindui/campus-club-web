@@ -87,7 +87,7 @@ export default {
     },
     created () {
         this.init();
-        this.initApprovered();
+       // this.initApprovered();
         //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
@@ -157,6 +157,7 @@ export default {
                     userCode:store.fetchIDlist("userInfo").userCode,
                     currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                     pageSize:store.fetchIDlist("pageSize"),
+                    queryType:"st-",//社团申请
                     pcsStCode:'1'  //审核中的数据
                 },{headers: {
                         'content-type': 'application/json',
@@ -194,7 +195,8 @@ export default {
             this.$axios
                 .post("/api/workFlowBusinessList", {
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    pcsStCode:'1'  //审核中的数据
+                    pcsStCode:'1',  //审核中的数据
+                    queryType:"st-",//社团申请
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -289,7 +291,8 @@ export default {
             this.$axios
                 .post("/api/workFlowBusinessList", {
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    pcsStFlag:'pcsStFlag'  //已经办完标志
+                    pcsStFlag:'pcsStFlag',  //已经办完标志,
+                    queryType:"st-",//社团申请
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

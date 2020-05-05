@@ -191,6 +191,16 @@ export default new Router({
                     meta: { title: '我的已办代办' },
                 },
                 {
+                    path: '/clubjb/clubActivityApprove',
+                    component: resolve => require(['../components/clubjb/clubActivityApprove/clubActivityApproval.vue'], resolve),
+                    meta: { title: '社团活动申请' },
+                },
+                {
+                    path: '/clubjb/clubActivityInfo',
+                    component: resolve => require(['../components/clubjb/clubActivityApprove/clubActivityInfo.vue'], resolve),
+                    meta: { title: '社团活动申请(经办)' },
+                },
+                {
                     path: '/clubjb/clubApproveInfo',
                     component: resolve => require(['../components/clubjb/clubApprove/clubApprovalInfo.vue'], resolve),
                     meta: { title: '代办详情' },
@@ -205,6 +215,16 @@ export default new Router({
                     path: '/clubfh/clubApproveInfo',
                     component: resolve => require(['../components/clubfh/clubApprove/clubApprovalInfo.vue'], resolve),
                     meta: { title: '代办详情' },
+                },
+                {
+                    path: '/clubfh/clubActivityApprove',
+                    component: resolve => require(['../components/clubfh/clubActivityApprove/clubActivityApproval.vue'], resolve),
+                    meta: { title: '社团活动申请(复审)' },
+                },
+                {
+                    path: '/clubfh/clubActivityInfo',
+                    component: resolve => require(['../components/clubfh/clubActivityApprove/clubActivityInfo.vue'], resolve),
+                    meta: { title: '社团活动申请(复审)' },
                 },
 
                 //社团活动管理路径

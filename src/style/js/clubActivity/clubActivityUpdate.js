@@ -419,7 +419,7 @@ export default {
                         this.baseInfoForm=successResponse.data.data;
                         this.baseInfoForm.activityTime = successResponse.data.data.activityTime
                         this.formDate = [successResponse.data.data.activityTime[0],successResponse.data.data.activityTime[1]]
-                        this.opinionForm.opinion=successResponse.data.data.createOpinion;
+                        this.opinionForm.opinion=successResponse.data.data.remark;
                         this.hideParms.uuid=successResponse.data.data.uuid;
                         this.hideParms.stCd=successResponse.data.data.stCd;
                         this.getFileList();
@@ -451,7 +451,6 @@ export default {
                     type: 'warning'
                 })
             }else {
-                //console.log("选择的数据为;"+JSON.stringify(selectData[0]));
                 this.$axios
                     .post("/api/workFlowBusinessAdd", {
                         workFlowCode: selectData[0].workFlowCode,
@@ -467,14 +466,13 @@ export default {
                     })
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
-                            // console.log(successResponse.data.data.grid.list)
                             this.workflowTableVisible = false;
                             let successMessage = successResponse.data.description;
                             this.$message({
                                 message: successMessage,
                                 type: 'success'
                             })
-                            this.$router.push("/clubinfo");
+                            this.$router.push("/clubActivity");
                             this.reload();
 
                         }

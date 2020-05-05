@@ -87,14 +87,11 @@ export default {
     },
     created () {
         this.init();
-        //this.initApprovered();
+       // this.initApprovered();
         //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
-        // store.saveIDlist("currentPage",val);
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
         //对话框确定按钮
@@ -154,10 +151,10 @@ export default {
                 .post("/api/workFlowBusinessList", {
                     workFlowCode: this.params.workFlowCode,
                     businessCode: this.params.businessCode,
+                    queryType:"activity-",//活动申请
                     userCode:store.fetchIDlist("userInfo").userCode,
                     currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                     pageSize:store.fetchIDlist("pageSize"),
-                    queryType:"st-",
                     pcsStCode:'1'  //审核中的数据
                 },{headers: {
                         'content-type': 'application/json',
@@ -195,8 +192,8 @@ export default {
             this.$axios
                 .post("/api/workFlowBusinessList", {
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    queryType:"st-",
-                    pcsStCode:'1'  //审核中的数据
+                    pcsStCode:'1' , //审核中的数据
+                    queryType:"activity-",//活动申请
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -245,9 +242,8 @@ export default {
                     type: 'warning'
                 })
             }else{
-                //console.log(JSON.stringify(selectData[0]))
-                this.$router.push({path:'/clubjb/clubActivityInfo',query:{businessAssociationCode:selectData[0].businessAssociationCode,
-                        uuid:selectData[0].uuid}});
+                this.$router.push({path:'/clubjb/clubActivityInfo',query:{businessAssociationCode:selectData[0].businessAssociationCode
+                , uuid:selectData[0].uuid}});
             }
         },
         handleSelectionChange(){},
@@ -292,8 +288,8 @@ export default {
             this.$axios
                 .post("/api/workFlowBusinessList", {
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    pcsStFlag:'pcsStFlag',  //已经办完标志
-                    queryType:"st-",
+                    pcsStFlag:'pcsStFlag' ,//已经办完标志
+                    queryType:"activity-",//活动申请
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取

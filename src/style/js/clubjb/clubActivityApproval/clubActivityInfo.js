@@ -1,7 +1,7 @@
-import store from "../../../store/store";
+import store from "../../../../store/store";
 import {
     checkBailPayMoney
-} from "../../../utils/validate/validate"; //引入自定义的校验js
+} from "../../../../utils/validate/validate"; //引入自定义的校验js
 const  checkIsBailPayMoney = (rule, value, callback) => {
     if(!value){
         return callback(new Error("活动资金不能为空"));
@@ -18,6 +18,7 @@ export default {
     inject:['reload'],
     data() {
         return {
+            isShow:true,
             active: 0,
             baseInfoForm: {
                 activityName: '',
@@ -31,7 +32,6 @@ export default {
                 stChargeSno:'',
                 stCd:'',
                 uuid:''
-
             },
             pickerOptions: {
                 shortcuts: [{
@@ -86,17 +86,14 @@ export default {
             workflowTableVisible:false,
             //审核人列表
             approverDataList:[],
-
             //异常对话框
             dialogVisible:false,
             errorMessage:'',
             uuid:''
-
-
         };
     },
     created () {
-        //初始文件列表
+        this.init();
     },
     methods: {
         //对话框确定按钮
@@ -130,41 +127,6 @@ export default {
             clock += ss;
             return (clock);
         },
-        //文件上传成功调用的事件
-        fileUploadSuccess(response, file, fileList) {
-            console.log(response);
-            if (response.status === 200) {
-                let successMessage = response.description;
-                this.$message({
-                    message: successMessage,
-                    top: 200,
-                    type: 'success',
-                })
-                //this.reload();
-                this.getFileList();
-
-            }
-            if (response.status === 400) {
-                let warnMessage = response.description;
-                this.$message({
-                    message: warnMessage,
-                    type: 'warning'
-                })
-                this.reload();
-            }
-            if (response.status === 500) { //后台异常时
-                let warnMessage = response.description;
-                this.$message({
-                    message: warnMessage,
-                    type: 'warning'
-                })
-            }
-            //alert('success');
-        },
-        //文件上传失败调用的事件
-        fileUploadError(err, file, fileList) {
-            alert('系统异常,上传失败！');
-        },
         next() {
             if (this.active++ > 2) {
                 alert('这是最后一步喽');
@@ -178,6 +140,191 @@ export default {
         onSubmit() {
             console.log('submit!');
         },
+        approverOpinionSave(opinionForm){ //审核意见保存
+            this.$refs[opinionForm].validate(valid => {
+                if (valid) {
+                    this.$axios
+                        .post("/api/workFlowBusinessOpinionSave", {
+                            approverOpinion:this.opinionForm.approverOpinion,
+                            uuid:this.$route.query.uuid,
+                            userCode:store.fetchIDlist("userInfo").userCode
+                        },{headers: {
+                                'content-type': 'application/json',
+                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            }})
+                        .then(successResponse => {
+                            if (successResponse.data.status === 200) {
+                                let successMessage = successResponse.data.description;
+                                this.$message({
+                                    message: successMessage,
+                                    top:200,
+                                    type: 'success',
+                                })
+                                this.opinionForm.approverOpinion= successResponse.data.data.approverOpinion;
+                            }
+                            if (successResponse.data.status === 400) {
+                                let warnMessage = successResponse.data.description;
+                                this.$message({
+                                    message: warnMessage,
+                                    type: 'warning'
+                                })
+                            }
+                            if (successResponse.data.status === 500) { //后台异常时
+                                let warnMessage = successResponse.data.description;
+                                this.$message({
+                                    message: warnMessage,
+                                    type: 'warning'
+                                })
+                            }
+                        })
+                        .catch(failResponse => {});
+                } else {
+                    return false;
+                }
+            });
+        },
+        refuse(opinionForm){
+            this.$refs[opinionForm].validate(valid => {
+                if (valid) {
+                    this.$axios
+                        .post("/api/workFlowBusinessRefuse", {
+                            approverOpinion:this.opinionForm.approverOpinion,
+                            uuid:this.$route.query.uuid,
+                            pcsStCode:'3',//流程编号不同过3
+                            activityInfo:"activityInfo",
+                            isBaseInfo:"isNotBaseInfo",
+                            userCode:store.fetchIDlist("userInfo").userCode
+                        },{headers: {
+                                'content-type': 'application/json',
+                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            }})
+                        .then(successResponse => {
+                            if (successResponse.data.status === 200) {
+                                let successMessage = successResponse.data.description;
+                                this.$message({
+                                    message: successMessage,
+                                    top:200,
+                                    type: 'success',
+                                })
+                                this.$router.push({path:'/clubjb/clubActivityApprove'});
+                            }
+                            if (successResponse.data.status === 400) {
+                                let warnMessage = successResponse.data.description;
+                                this.$message({
+                                    message: warnMessage,
+                                    type: 'warning'
+                                })
+                            }
+                            if (successResponse.data.status === 500) { //后台异常时
+                                let warnMessage = successResponse.data.description;
+                                this.$message({
+                                    message: warnMessage,
+                                    type: 'warning'
+                                })
+                            }
+                        })
+                        .catch(failResponse => {});
+                } else {
+                    return false;
+                }
+            });
+        },
+        approverNext(opinionForm){ //发送到下一岗位审批
+            this.$refs[opinionForm].validate(valid => {
+                if (valid) {
+                    this.workflowTableVisible = true;
+                    this.$axios
+                        .post("/api/stApproverList", {
+                            approverType:'1'//复核人标志
+                        }, {
+                            headers: {
+                                'content-type': 'application/json',
+                                "token": store.fetchIDlist("token")  //token换成从缓存获取
+                            }
+                        })
+                        .then(successResponse => {
+                            if (successResponse.data.status === 200) {
+                                this.approverDataList = [];
+                                this.approverDataList = successResponse.data.data.grid.list;
+                                this.pageParms.total = successResponse.data.data.grid.total;
+                                this.loadingworkflow=false
+                            }
+                            if (successResponse.data.status === 400) {
+                                let warnMessage = successResponse.data.description;
+                                this.$message({
+                                    message: warnMessage,
+                                    type: 'warning'
+                                })
+                            }
+                            if (successResponse.data.status === 500) { //后台异常时
+                                this.errorMessage = successResponse.data.description;
+                                this.dialogVisible = true;
+                            }
+                        })
+                        .catch(failResponse => {
+                        });
+                }
+            });
+        },
+        confirmAndSubmit(){  //提交审核确定按钮事件
+            console.log("------sss"+this.hideParms.sysBusinessCode);
+            const selectData=this.$refs.approverListTable.selection;
+            console.log(selectData[0])
+            if(selectData.length>1){
+                this.$message({
+                    message: "请最多选择一条",
+                    type: 'warning'
+                })
+            }else if(selectData.length<1) {
+                this.$message({
+                    message: "请选择一条记录",
+                    type: 'warning'
+                })
+            }else {
+                //console.log("选择的数据为;"+JSON.stringify(selectData[0]));
+                this.$axios
+                    .post("/api/fh/workFlowBusinessAdd", {
+                        workFlowCode: selectData[0].workFlowCode,
+                        approverCode: selectData[0].workFlowApproverCode,
+                        workFlowNodeCode: selectData[0].workFlowNodeCode,
+                        userCode: selectData[0].userCode,
+                        approverOpinion:this.opinionForm.approverOpinion,
+                        uuid:this.$route.query.uuid,
+                        /*pcsStCode:'2',//流程编号同过2*/
+                    }, {
+                        headers: {
+                            'content-type': 'application/json',
+                            "token": store.fetchIDlist("token")  //token换成从缓存获取
+                        }
+                    })
+                    .then(successResponse => {
+                        if (successResponse.data.status === 200) {
+                            this.workflowTableVisible = false;
+                            let successMessage = successResponse.data.description;
+                            this.$message({
+                                message: successMessage,
+                                type: 'success'
+                            })
+                            this.$router.push("/clubjb/clubActivityApprove");
+                            this.reload();
+
+                        }
+                        if (successResponse.data.status === 400) {
+                            let warnMessage = successResponse.data.description;
+                            this.$message({
+                                message: warnMessage,
+                                type: 'warning'
+                            })
+                        }
+                        if (successResponse.data.status === 500) { //后台异常时
+                            this.errorMessage = successResponse.data.description;
+                            this.dialogVisible = true;
+                        }
+                    })
+                    .catch(failResponse => {
+                    });
+            }
+        },//提交
         getFileList(){
             this.$axios
                 .post("/api/fileList", {
@@ -212,27 +359,20 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        //移除文件
-        detailFile(index,fileTableData){
-            alert(fileTableData[index].uuid);
+        back(){
+            this.$router.push("/clubjb/clubActivityApprove");
         },
-        deleteFile(index,fileTableData){
+        init(){
             this.$axios
-                .post("/api/deleteFile", {
-                    uuid:fileTableData[index].uuid,
-                    userCode:store.fetchIDlist("userInfo").userCode,
-
+                .post("/api/clubActivityDetail", {
+                    activityId:this.$route.query.businessAssociationCode,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        let successMessage = successResponse.data.description;
-                        this.$message({
-                            message: successMessage,
-                            type: 'success'
-                        })
+                        this.baseInfoForm=successResponse.data.data;
                         this.getFileList();
                     }
                     if (successResponse.data.status === 400) {
@@ -248,222 +388,5 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        baseInfoSave(baseInfoForm){
-            this.$refs[baseInfoForm].validate(valid => {
-                if (valid) {
-                    this.$axios
-                        .post("/api/clubActivityAdd", {
-                            activityName:this.baseInfoForm.activityName,
-                            activitySpace:this.baseInfoForm.activitySpace,
-                            activityType:this.baseInfoForm.activityType,
-                            foundsNum:this.baseInfoForm.foundsNum,
-                            activityTime:this.baseInfoForm.activityTime,
-                            activityDsc:this.baseInfoForm.activityDsc,
-                            uuid:this.hideParms.uuid!=''?this.hideParms.uuid:null,
-                            userCode:store.fetchIDlist("userInfo").userCode
-                        },{headers: {
-                                'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
-                            }})
-                        .then(successResponse => {
-                            if (successResponse.data.status === 200) {
-                                this.hideParms.uuid=successResponse.data.data.uuid;
-                                this.hideParms.stCd=successResponse.data.data.stCd;
-                                this.hideParms.sysBusinessCode=successResponse.data.data.sysBusinessCode;
-                                this.baseInfoForm=successResponse.data.data;
-                                let successMessage = successResponse.data.description;
-                                this.$message({
-                                    message: successMessage,
-                                    top:200,
-                                    type: 'success',
-
-                                })
-                                this.dialogFormVisible=false;
-                                this.init();
-                                this.getFileList();
-
-                            }
-                            if (successResponse.data.status === 400) {
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                            if (successResponse.data.status === 500) { //后台异常时
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                                const loading = this.$loading({
-                                    lock: true,
-                                    text: 'Loading',
-                                    spinner: 'el-icon-loading',
-                                    background: 'rgba(0, 0, 0, 0.7)'
-                                });
-                                setTimeout(() => {
-                                    // this.fullscreenLoading = false;
-                                    loading.close();
-                                }, 5000);
-                                window.localStorage.clear();
-                                this.$router.push("/");
-                            }
-                        })
-                        .catch(failResponse => {});
-                } else {
-                    //alert('error');
-                    console.log("error submit!!");
-                    return false;
-                }
-            });
-        },
-        opinionSave(opinionForm){  //活动申请理由保存
-            this.$refs[opinionForm].validate(valid => {
-                if (valid) {
-                    this.$axios
-                        .post("/api/clubActivitySetOpinion", {
-                            activityName:this.baseInfoForm.activityName,
-                            remark:this.opinionForm.opinion,
-                            uuid:this.baseInfoForm.uuid,
-                            userCode:store.fetchIDlist("userInfo").userCode
-                        },{headers: {
-                                'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
-                            }})
-                        .then(successResponse => {
-                            if (successResponse.data.status === 200) {
-                                let successMessage = successResponse.data.description;
-                                this.$message({
-                                    message: successMessage,
-                                    top:200,
-                                    type: 'success',
-                                })
-                            }
-                            if (successResponse.data.status === 400) {
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                            if (successResponse.data.status === 500) { //后台异常时
-                                let warnMessage = successResponse.data.description;
-                                this.$message({
-                                    message: warnMessage,
-                                    type: 'warning'
-                                })
-                            }
-                        })
-                        .catch(failResponse => {});
-                } else {
-                    return false;
-                }
-            });
-        },
-        back(){
-            this.$router.push("/clubActivity");
-        },
-        startAndSubmit(opinionForm){
-            if(this.hideParms.sysBusinessCode===''){
-                this.$message({
-                    message: "请先完善基本信息！",
-                    type: 'warning'
-                })
-            }else{
-                this.$refs[opinionForm].validate(valid => {
-                    if (valid) {
-                        this.workflowTableVisible = true;
-                        this.$axios
-                            .post("/api/stApproverList", {
-                                approverType:'0' //经办审核人标志
-                            }, {
-                                headers: {
-                                    'content-type': 'application/json',
-                                    "token": store.fetchIDlist("token")  //token换成从缓存获取
-                                }
-                            })
-                            .then(successResponse => {
-                                if (successResponse.data.status === 200) {
-                                    console.log(successResponse.data.data.grid.list)
-                                    this.approverDataList = [];
-                                    this.approverDataList = successResponse.data.data.grid.list;
-                                    this.pageParms.total = successResponse.data.data.grid.total;
-                                }
-                                if (successResponse.data.status === 400) {
-                                    let warnMessage = successResponse.data.description;
-                                    this.$message({
-                                        message: warnMessage,
-                                        type: 'warning'
-                                    })
-                                }
-                                if (successResponse.data.status === 500) { //后台异常时
-                                    this.errorMessage = successResponse.data.description;
-                                    this.dialogVisible = true;
-                                }
-                            })
-                            .catch(failResponse => {
-                            });
-                    }
-                });
-            }
-        },
-        confirmAndSubmit(){  //提交审核确定按钮事件
-            const selectData=this.$refs.approverListTable.selection;
-            console.log(selectData[0])
-            if(selectData.length>1){
-                this.$message({
-                    message: "请最多选择一条",
-                    type: 'warning'
-                })
-            }else if(selectData.length<1) {
-                this.$message({
-                    message: "请选择一条记录",
-                    type: 'warning'
-                })
-            }else {
-                //console.log("选择的数据为;"+JSON.stringify(selectData[0]));
-                this.$axios
-                    .post("/api/workFlowBusinessAdd", {
-                        workFlowCode: selectData[0].workFlowCode,
-                        approverCode: selectData[0].workFlowApproverCode,
-                        workFlowNodeCode: selectData[0].workFlowNodeCode,
-                        userCode: selectData[0].userCode,
-                        businessCode:this.hideParms.sysBusinessCode
-                    }, {
-                        headers: {
-                            'content-type': 'application/json',
-                            "token": store.fetchIDlist("token")  //token换成从缓存获取
-                        }
-                    })
-                    .then(successResponse => {
-                        if (successResponse.data.status === 200) {
-                            // console.log(successResponse.data.data.grid.list)
-                            this.workflowTableVisible = false;
-                            let successMessage = successResponse.data.description;
-                            this.$message({
-                                message: successMessage,
-                                type: 'success'
-                            })
-                            this.$router.push("/clubActivity");
-                            this.reload();
-
-                        }
-                        if (successResponse.data.status === 400) {
-                            let warnMessage = successResponse.data.description;
-                            this.$message({
-                                message: warnMessage,
-                                type: 'warning'
-                            })
-                        }
-                        if (successResponse.data.status === 500) { //后台异常时
-                            this.errorMessage = successResponse.data.description;
-                            this.dialogVisible = true;
-                        }
-                    })
-                    .catch(failResponse => {
-                    });
-            }
-        }
     }
 }
