@@ -75,18 +75,16 @@
                     </div>
                 </el-dialog>
 
-                <el-card shadow="hover" style="height:252px;">
+                <el-card shadow="hover" style="height:252px;" v-if="roleCode=='role-00005'">
                     <div slot="header" class="clearfix">
-                        <span>子系统详情</span>
+                        <span>社团收支详情</span>
                     </div>
-                    现状管理
-                    <el-progress button-type="terminateProcess"s :percentage="71.3" color="#42b983"></el-progress>
-                    经营管理
-                    <el-progress :percentage="24.1" color="#f1e05a"></el-progress>
-                    土地巡查
-                    <el-progress :percentage="3.7"></el-progress>
-                    土地退出
-                    <el-progress :percentage="0.9" color="#f56c6c"></el-progress>
+                    收入管理
+                    <el-progress button-type="terminateProcess"s :percentage="initResult.stClubFundsPer[0]" color="#42b983"></el-progress>
+                    支出管理
+                    <el-progress :percentage="initResult.stClubFundsPer[1]" color="#f1e05a"></el-progress>
+                    其他
+                    <el-progress :percentage="initResult.stClubFundsPer[2]"></el-progress>
                 </el-card>
             </el-col>
 
@@ -304,12 +302,12 @@
         <el-row :gutter="20">
             <el-col :span="12">
                 <el-card shadow="hover">
-                    <schart ref="bar" class="schart" canvasId="bar" :data="data" type="bar" :options="options"></schart>
+                    <schart ref="bar" class="schart" canvasId="bar" :data="initResult.stNewsList" type="bar" :options="options"></schart>
                 </el-card>
             </el-col>
             <el-col :span="12">
                 <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :data="data" type="line" :options="options2"></schart>
+                    <schart ref="line" class="schart" canvasId="line" :data="initResult.stNoticeList" type="line" :options="options2"></schart>
                 </el-card>
             </el-col>
         </el-row>

@@ -159,6 +159,7 @@ export default {
                     status: true,
                 }
             ],
+            stNewsList:[],
             data: [{
                 name: '2018/09/04',
                 value: 1083
@@ -189,14 +190,14 @@ export default {
                 }
             ],
             options: {
-                title: '最近七天每天的用户访问量',
+                title: '最近七天的社团新闻访问量',
                 showValue: false,
                 fillColor: 'rgb(45, 140, 240)',
                 bottomPadding: 30,
                 topPadding: 30
             },
             options2: {
-                title: '最近七天用户访问趋势',
+                title: '最近七天的社团公告访问量',
                 fillColor: '#FC6FA1',
                 axisColor: '#008ACD',
                 contentColor: '#EEEEEE',
