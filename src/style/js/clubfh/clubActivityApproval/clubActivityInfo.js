@@ -94,6 +94,10 @@ export default {
     },
     created () {
         this.init();
+        let pageView=this.$route.query.pageView;
+        if(pageView!=null||pageView=='disabled'){
+            this.isShow=false;
+        }
     },
     methods: {
         //对话框确定按钮

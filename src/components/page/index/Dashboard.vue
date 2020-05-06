@@ -273,33 +273,60 @@
                     </el-col>
                 </el-row>
 
-                <el-card shadow="hover" style="height:403px;">
+                <el-card shadow="hover" style="height:403px;" v-if="roleCode=='role-00005'">
                     <div slot="header" class="clearfix">
-                        <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                        <span>待办/已办事项</span>
+                        <!--<el-button style="float: right; padding: 3px 0" type="text">添加</el-button>-->
                     </div>
-                    <el-table :data="todoList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
+                    <el-table :data="initResult.sysBusinessList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
                         <el-table-column width="40">
                             <template slot-scope="scope">
-                                <el-checkbox v-model="scope.row.status"></el-checkbox>
+                                <el-checkbox v-model="scope.row.businessState"></el-checkbox>
                             </template>
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
+                                <div class="todo-item" :class="{'todo-item-del': scope.row.businessState=='1'}">
+                                    业务编号：{{ scope.row.businessCode }}；描述：{{scope.row.businessDesc}}
+                                </div>
                             </template>
                         </el-table-column>
                         <el-table-column width="60">
                             <template slot-scope="scope">
                                 <i class="el-icon-edit"></i>
-                                <i class="el-icon-delete"></i>
+                                <i class="el-icon-view"></i>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </el-card>
+                <el-card shadow="hover" style="height:403px;" v-if="roleCode=='role-00003'">
+                    <div slot="header" class="clearfix">
+                        <span>待办/已办事项</span>
+                    </div>
+                    <el-table :data="initResult.clubFunds" :show-header="false" height="304" style="width: 100%;font-size:14px;">
+                        <el-table-column width="40">
+                            <template slot-scope="scope">
+                                <el-checkbox v-model="scope.row.fundsPsccd"></el-checkbox>
+                            </template>
+                        </el-table-column>
+                        <el-table-column>
+                            <template slot-scope="scope">
+                                <div class="todo-item" :class="{'todo-item-del': scope.row.fundsPsccd=='1'}">
+                                    财务编号：{{ scope.row.fundsCd }}；创建时间：{{ scope.row.createTime }}；社费缴纳。
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="60">
+                            <template slot-scope="scope">
+                                <i class="el-icon-edit"></i>
+                                <i class="el-icon-view"></i>
                             </template>
                         </el-table-column>
                     </el-table>
                 </el-card>
             </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row :gutter="20" v-if="roleCode=='role-00005'">
             <el-col :span="12">
                 <el-card shadow="hover">
                     <schart ref="bar" class="schart" canvasId="bar" :data="initResult.stNewsList" type="bar" :options="options"></schart>

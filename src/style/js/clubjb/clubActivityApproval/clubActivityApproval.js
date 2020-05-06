@@ -339,8 +339,7 @@ export default {
                     type: 'warning'
                 })
             }else{
-                //console.log(JSON.stringify(selectData[0]))
-                this.$router.push({path:'/clubjb/clubApproveInfo',query:{businessAssociationCode:selectData[0].businessAssociationCode,
+                this.$router.push({path:'/clubjb/clubActivityInfo',query:{businessAssociationCode:selectData[0].businessAssociationCode,
                         uuid:selectData[0].uuid,pageView:'disabled'}});
             }
         }
