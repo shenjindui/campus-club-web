@@ -93,6 +93,7 @@ export default {
     },
     created () {
         this.init();
+        this.initDdct();
     },
     methods: {
         //对话框确定按钮
@@ -175,6 +176,33 @@ export default {
         },
         back(){
             this.$router.push("/clubActivity");
+        },
+        initDdct(){
+            this.$axios
+                .post("/api/clubActivityAddInit", {
+                    "dctKey":"activityType"
+                },{headers: {
+                        'content-type': 'application/json',
+                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                    }})
+                .then(successResponse => {
+                    if (successResponse.data.status === 200) {
+                        this.activityTypeList=[];
+                        this.activityTypeList=successResponse.data.data.activityTypeList;
+                    }
+                    if (successResponse.data.status === 400) {
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'warning'
+                        })
+                    }
+                    if (successResponse.data.status === 500) { //后台异常时
+                        this.errorMessage =successResponse.data.description;
+                        this.dialogVisible=true;
+                    }
+                })
+                .catch(failResponse => {});
         },
         init(){
             this.$axios

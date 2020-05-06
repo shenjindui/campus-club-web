@@ -72,6 +72,7 @@ export default {
                 stCd:'',
                 sysBusinessCode:''
             },
+            activityTypeList:[],
             rules: {
                 activityName: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
                 activitySpace: [{ required: true, message: "请输入活动地点", trigger: "blur" }],
@@ -91,12 +92,10 @@ export default {
             dialogVisible:false,
             errorMessage:'',
             uuid:''
-
-
         };
     },
     created () {
-        //初始文件列表
+        this.init();
     },
     methods: {
         //对话框确定按钮
@@ -279,7 +278,7 @@ export default {
 
                                 })
                                 this.dialogFormVisible=false;
-                                this.init();
+                                //this.init();
                                 this.getFileList();
 
                             }
@@ -464,6 +463,36 @@ export default {
                     .catch(failResponse => {
                     });
             }
-        }
+        },
+        /**
+         * 添加的时候初始化
+         */
+        init(){
+            this.$axios
+                .post("/api/clubActivityAddInit", {
+                    "dctKey":"activityType"
+                },{headers: {
+                        'content-type': 'application/json',
+                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                    }})
+                .then(successResponse => {
+                    if (successResponse.data.status === 200) {
+                        this.activityTypeList=[];
+                        this.activityTypeList=successResponse.data.data.activityTypeList;
+                    }
+                    if (successResponse.data.status === 400) {
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'warning'
+                        })
+                    }
+                    if (successResponse.data.status === 500) { //后台异常时
+                        this.errorMessage =successResponse.data.description;
+                        this.dialogVisible=true;
+                    }
+                })
+                .catch(failResponse => {});
+        },
     }
 }
