@@ -107,4 +107,22 @@ export default {
                 return '未知错误';
         }
     },
+    /**
+     * 支付状态
+     * @param row
+     * @param column
+     * @returns {string}
+     */
+    formateFundsPsccd: function (row, column) {
+        switch(row.fundsPsccd){
+            case '0':
+                return '未支付';
+                break;
+            case '1':
+                return '已支付';
+                break;
+            default:
+                return '未知错误';
+        }
+    },
 }

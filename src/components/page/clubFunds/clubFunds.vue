@@ -24,11 +24,11 @@
                     </el-dialog>
                     <template v-if="message === 'first'">
                         <div class="handle-box">
-                            <el-input  placeholder="财务编号" class="handle-input mr10" v-model="params.fundsCd"></el-input>
-                            <el-input  placeholder="财务所属社团编号" class="handle-input mr10" v-model="params.stCd"></el-input>
+                            <el-input  placeholder="财务编号" class="handle-input mr10" v-model.trim="params.fundsCd"></el-input>
+                           <!-- <el-input  placeholder="财务所属社团编号" class="handle-input mr10" v-model="params.stCd"></el-input>-->
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -48,7 +48,7 @@
                         </div>
                         <p></p>
                         <div>
-                            <el-table :data="ListData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange">
+                            <el-table :data="ListData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange" v-loading="loading">
                                 <el-table-column type="selection" width="40" align="center"></el-table-column>
                                 <el-table-column prop="uuid" label="财务UUID" width="200" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="fundsCd" label="财务编号" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
@@ -57,9 +57,9 @@
                                 <el-table-column prop="typeDdct" label="财务操作类型" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="amountType" :formatter="common.formateAmountType" label="金额操作类型" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="amount"  label="金额" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="fundsPsccd"  label="是否支付" width="100" align="center" :formatter="formateFundsPsccd" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="fundsPsccd"  label="是否支付" width="100" align="center" :formatter="common.formateFundsPsccd" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
@@ -218,7 +218,7 @@
                                 </el-row>
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="所属社团编号" :label-width="formLabelWidth">
+                                        <el-form-item label="所属社团编号" :label-width="formLabelWidth" prop="stCd">
                                             <el-select v-model="updateForm.stCd" placeholder="所属社团编号" required="required" >
                                                 <el-option
                                                         v-for="item in stList"
@@ -229,7 +229,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="财务操作类型" :label-width="formLabelWidth" >
+                                        <el-form-item label="财务操作类型" :label-width="formLabelWidth" prop="amountType">
                                             <el-select v-model="updateForm.type" placeholder="财务操作类型" class="handle-select mr10" >
                                                 <el-option
                                                         v-for="item in fundstypeList"
@@ -242,13 +242,13 @@
                                 </el-row>
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="金额" :label-width="formLabelWidth" >
+                                        <el-form-item label="金额" :label-width="formLabelWidth" prop="amount">
                                             <el-input v-model="updateForm.amount" placeholder="金额" ></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="金额类型" :label-width="formLabelWidth">
-                                            <el-select v-model="updateForm.amountType" placeholder="财务操作类型" class="handle-select mr10">
+                                        <el-form-item label="金额类型" :label-width="formLabelWidth"  prop="amountType">
+                                            <el-select v-model="updateForm.amountType" placeholder="金额类型" class="handle-select mr10">
                                                 <el-option
                                                         v-for="item in amountTypeList"
                                                         :key="item.dctVal"
@@ -277,6 +277,6 @@
 <script src="../../../style/js/clubFunds/clubFunds.js">
 </script>
 <style scoped>
-    @import '../../../style/csss/common/common.css';/* 引入css文件*/
+    @import '../../../style/csss/common/common.css';
 </style>
 
