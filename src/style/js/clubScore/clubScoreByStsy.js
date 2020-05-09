@@ -1,7 +1,25 @@
-//引入存储数据的js
 import store from "../../../store/store";
-//引入表单验证
-//import { validateLen, validateChart_ } from '../../../utils/validate/validate'
+import {
+    checkScore,
+} from "../../../utils/validate/validate"; //引入自定义的校验js
+/**
+ * 校验分数
+ * @param rule
+ * @param value
+ * @param callback
+ * @returns {*}
+ */
+const  checkisScore = (rule, value, callback) => {
+    if(!value){
+        return callback(new Error("评分不能为空不能为空"));
+    }else{
+        if (checkScore(value)) {
+            callback();
+        }else{
+            return callback(new Error("评分需要在0-100之间"));
+        }
+    }
+}
 export default {
 
     name: 'tabs',
@@ -9,6 +27,9 @@ export default {
         return {
             ratersPsccd: '0',
             showHeader: false,
+            /**
+             * 时间控件初始化
+             */
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -38,27 +59,49 @@ export default {
             },
             value1: '',
             value2: '44444',
+            /**
+             * table 列表菜单数据初始化
+             */
             ListData: [],
+            /**
+             * 分页参数
+             */
             pageParms: [
                 {
                     total: '',
-                    total2: '',
+                    total2: '0',
                 }
             ],
+            /**
+             * 添加表单初始化
+             */
             addForm: {
                 type: '',
                 stCd: '',
                 amount: '',
                 amountType: '',
             },
+            /**
+             * 搜索按钮的参数初始化
+             */
             params: [],
+            /**
+             * 状态数据字典初始化
+             */
             statusCds: [],
+            /**
+             * 后台异常500 弹窗初始化
+             */
             dialogVisible: false,
             errorMessage: '',
-            /* //添加对话框初始化*/
+            /**
+             * 添加对话框初始化
+             */
             dialogTableVisible: false,
             dialogFormVisible: false,
-            //详情对话框
+            /**
+             *  详情对话框初始化
+             */
             detailFormVisible: false,
             detailFormVisible1: false,
             detailForm: {
@@ -72,6 +115,9 @@ export default {
                 createTime: '',
                 updateTime: '',
             },
+            /**
+             * 更新对话框初始化
+             */
             updateFormVisible: false,
             updateForm: {
                 ratersAssociationCode: '',
@@ -80,64 +126,63 @@ export default {
                 score: '',
                 ratersOpin: '',
             },
+            /**
+             * 设置el-form-item 的长度
+             */
             formLabelWidth: '120px',
-
-            //分页参数设置
+            /**
+             * 分页参数设置
+             */
             currentPage: '',
             pageSize: '',
-
-
             rules: {
-                menuName: [
-                    {required: true, message: "请输入菜单名称", trigger: "blur"}
-                ],
-                url: [{required: true, message: "请输入菜单URL", trigger: "blur"}],
-                sort: [{required: true, message: "请输入菜单排序码", trigger: "blur"},
-                    {
-                        type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
-                            return Number(value);
-                        }
-                    }
-                ],
-                leafFlagCd: [{required: true, message: "请选择", trigger: "blur"}],
-                parentMenuCode: [{required: true, message: "请选择", trigger: "blur"}],
-
+                schoolYear: [{required: true, message: "请选择学年", trigger: "blur"}],
+                uuid: [{required: true, message: "uuid不能为空", trigger: "blur"}],
+                ratersAssociationCode: [{required: true, message: "评审对象编号不能为空", trigger: "blur"}],
+                ratersAssociationName: [{required: true, message: "评审对象名称不能为空", trigger: "blur"}],
+                semesters: [{required: true, message: "请选择学期", trigger: "blur"}],
+                score: [{required: true, message: "请输入得分", trigger: "blur"},
+                    { validator: checkisScore ,trigger: "blur" }],
+                ratersOpin: [{required: true, message: "请输入评分意见", trigger: "blur"}],
             },
-            messagePsccdList: [
-                {
-                    Cd: '1',
-                    Name: '已处理'
-                },
-                {
-                    Cd: '0',
-                    Name: '处理中'
-                }
-            ],
-            //数据字典初始化
+            /**
+             * 数据字典初始化
+             */
             stList: [],
             schoolYearList:[],
             semestersList:[],
             ratersPsccdList:[],
             isShowStList:false
-
         }
-
-
     },
     created () {
+        /**
+         * 页面创建时调用初始化方法
+         */
         this.init("0");
-        //页面初始化清空分页参数
+        /**
+         * 页面初始化清空分页参数
+         */
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
         this.initDdct();
     },
     methods: {
+        /**
+         * 取消更新事件
+         * @param updateForm
+         * @constructor
+         */
         UpdateCancle(updateForm){
             this.$refs[updateForm].resetFields();
             this.updateFormVisible=false;
         },
+        /**
+         * 更新事件
+         * @param updateForm
+         * @constructor
+         */
         Update(updateForm){
             this.$refs[updateForm].validate(valid => {
                 if (valid) {
@@ -150,7 +195,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -180,54 +225,44 @@ export default {
                 }
             });
         },
+        /**
+         * 详情页返回事件
+         * @param detailForm
+         * @constructor
+         */
         DetailCancle(detailForm){
             this.$refs[detailForm].resetFields();
             this.detailFormVisible=false;
             this.detailFormVisible1=false;
         },
-        //对话框确定按钮
+        /**
+         * 后台500弹出框确认函数
+         */
         handleClose() {
              this.dialogVisible=false;
-             store.saveIDlist("token",null);
-            this.$router.push("/");
+             //store.saveIDlist("token",null);
+             //this.$router.push("/");
         },
-        //对状态进行翻译
-       formateStatus: function (row, column) {
-            switch(row.messagePsccd){
-                case '0':
-                    return '处理中';
-                    break;
-                case '1':
-                    return '已处理';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
-        dateformatUpdateTime: function (row, column) {
-            var date = new Date(row.updateTime).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-        },
-        dateformatCreateTime: function (row, column) {
-            var date = new Date(row.createTime).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-        },
-        dateformats: function (date) {
-            var date = new Date(date).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-        },
+        /**
+         * 重置事件
+         * @param ratersPsccd
+         */
         reset(ratersPsccd){
-            this.params={
-            };
+            this.params={};
             this.search(ratersPsccd);
         },
+        /**
+         * 添加事件初始化
+         */
         add(){
             this.dialogFormVisible = true;
             this.initDdct();
         },
+        /**
+         * 添加事件确定
+         * @param addForm
+         * @constructor
+         */
         Add(addForm){
             this.$refs[addForm].validate(valid => {
                 if (valid) {
@@ -239,7 +274,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -265,19 +300,20 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
+        /**
+         * 初始化数据字典
+         */
         initDdct(){
             this.$axios
                 .post("/api/scoreinit", {
                     userCode:store.fetchIDlist("userInfo").userCode
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -301,6 +337,10 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 搜索事件
+         * @param ratersPsccd
+         */
         search(ratersPsccd){
             this.$axios
                     .post("/api/scorelist", {
@@ -315,11 +355,10 @@ export default {
                         pageSize:store.fetchIDlist("pageSize")
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data);
                         this.ListData=[];
                         this.ListData=successResponse.data.data.grid.list;
                         this.total='';
@@ -346,11 +385,15 @@ export default {
                         this.dialogVisible=true;
                     }
                 })
-                .catch(failResponse => {});
-        }, //搜索按钮事件
+                .catch(failResponse => {
+
+                });
+        },
+        /**
+         * 删除事件
+         */
         deletes(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -374,7 +417,7 @@ export default {
                             flag:"0"
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -392,7 +435,7 @@ export default {
                                     type: 'warning'
                                 })
                             }
-                            if (successResponse.data.status === 500) { //后台异常时
+                            if (successResponse.data.status === 500) {
 
                             }
                         })
@@ -403,9 +446,11 @@ export default {
                         message: '已取消'
                     });
                 });
-
             }
         },
+        /**
+         * 评分事件
+         */
         edit(){
             const selectData=this.$refs.multipleTable.selection;
             if(selectData.length>1){
@@ -424,7 +469,7 @@ export default {
                         uuid: selectData[0].uuid,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -438,13 +483,19 @@ export default {
                                 type: 'warning'
                             })
                         }
-                        if (successResponse.data.status === 500) { //后台异常时
+                        if (successResponse.data.status === 500) {
 
                         }
                     })
-                    .catch(failResponse => {});
+                    .catch(failResponse => {
+
+                    });
             }
         },
+        /**
+         * 详情事件
+         * @param ratersPsccd
+         */
         detail(ratersPsccd){
             let selectData='';
             if(ratersPsccd=='0'){
@@ -452,7 +503,6 @@ export default {
             }else{
                 selectData=this.$refs.multipleTables.selection;
             }
-            //const selectData=this.$refs.multipleTable.selection;
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -471,13 +521,13 @@ export default {
                         uuid: selectData[0].uuid,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
                             this.detailForm=successResponse.data.data;
-                            this.detailForm.createTime=this.dateformats(this.detailForm.createTime);
-                            this.detailForm.updateTime=this.dateformats(this.detailForm.updateTime);
+                            this.detailForm.createTime=this.dateFormate.dateformat(this.detailForm.createTime);
+                            this.detailForm.updateTime=this.dateFormate.dateformat(this.detailForm.updateTime);
                             if(ratersPsccd=='0'){
                                 this.detailFormVisible=true;
                             }else{
@@ -491,13 +541,17 @@ export default {
                                 type: 'warning'
                             })
                         }
-                        if (successResponse.data.status === 500) { //后台异常时
+                        if (successResponse.data.status === 500) {
 
                         }
                     })
                     .catch(failResponse => {});
             }
         },
+        /**
+         * 初始化方法
+         * @param ratersPsccd
+         */
         init(ratersPsccd){
             this.$axios
                 .post("/api/scorelist", {
@@ -506,7 +560,7 @@ export default {
                     ratersType:"ratersType1",
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                 }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -526,7 +580,7 @@ export default {
                             type: 'warning'
                         })
                     }
-                    if (successResponse.data.status === 500) { //后台异常时
+                    if (successResponse.data.status === 500) {
                         this.errorMessage =successResponse.data.description;
                         this.dialogVisible=true;
                     }
@@ -546,31 +600,37 @@ export default {
             }
         },
         second(){
-            alert('2222');
             console.log('我是配置管理');
         },
         third(){
-            alert('2222');
             console.log('我是配置管理');
         },
+        /**
+         * 添加取消
+         * @param addForm
+         * @constructor
+         */
         AddCancle(addForm){
             this.$refs[addForm].resetFields();
             this.dialogFormVisible=false;
         },
-        //分页事件 页面尺寸事件
+        /**
+         * 分页事件 页面尺寸事件
+         * @param val
+         */
         handleSizeChange(val){
             store.saveIDlist("pageSize",val);
             this.search('0');
         },
-        // /页面当前页
+        /**
+         * 页面当前页
+         * @param val
+         */
         handleCurrentChange(val){
-            // alert(val);
             //this.currentPage=val;
             store.saveIDlist("currentPage",val);
             this.search('0');
         },
-
-
     },
     computed: {
         unreadNum(){

@@ -1,9 +1,7 @@
-//引入存储数据的js
 import store from "../../../store/store";
 //引入表单验证
 //import { validateLen, validateChart_ } from '../../../utils/validate/validate'
 export default {
-
     name: 'tabs',
     data() {
         return {
@@ -115,34 +113,27 @@ export default {
 
             },
             parentMenuCodes:[],
-
             //分页参数设置
             currentPage:'',
             pageSize:'',
 
             //生效失效按钮的显影
             isStatus:true,
-
         }
     },
     created () {
         this.init();
-        //
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
-        //
         this.statusCds = store.fetchIDlist("statusCd");
         let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
-
-        //
         userUpdateCancle(updateForm){
             this.$refs[updateForm].resetFields();
             this.updateFormVisible=false;
         },
-        //添加菜单取消操作时，重置表单的值
+        //添加用户取消操作时，重置表单的值
         userAddCancle(addForm){
             this.$refs[addForm].resetFields();
             this.dialogFormVisible=false;
@@ -151,13 +142,13 @@ export default {
             this.$refs[detailForm].resetFields();
             this.detailFormVisible=false;
         },
-        //菜单添加回调函数
+        //用户添加回调函数
         userAdd(addForm){
             this.$refs[addForm].validate(valid => {
                 if (valid) {
                     this.$axios
                         .post("/api/useradd", {
-                            loginName: this.addForm.loginName,//菜单名称
+                            loginName: this.addForm.loginName,
                             jobNum: this.addForm.jobNum,
                             password: this.addForm.password,
                             realname: this.addForm.realname,
@@ -169,7 +160,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -202,10 +193,10 @@ export default {
                             if (successResponse.data.status === 500) { //后台异常时
                             }
                         })
-                        .catch(failResponse => {});
+                        .catch(failResponse => {
+
+                        });
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });

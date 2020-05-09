@@ -303,23 +303,18 @@ export default {
         },
         //tab切换
         handleClick(tab, event) {
-            console.log(tab, event);
             if(tab.name == 'first'){
-                // 触发‘菜单列表’事件
               //  this.init();
             }else if(tab.name=='second'){
-                // 触发‘用户管理’事件
                 this.second();
             }else if(tab.name=='third'){
                  this.third();
             }
         },
         second(){
-            alert('2222');
             console.log('我是配置管理');
         },
         third(){
-            alert('2222');
             console.log('我是配置管理');
         },
         //分页事件 页面尺寸事件
@@ -329,7 +324,6 @@ export default {
         },
         // /页面当前页
         handleCurrentChange(val){
-            // alert(val);
             //this.currentPage=val;
             store.saveIDlist("currentPage",val);
             this.search();

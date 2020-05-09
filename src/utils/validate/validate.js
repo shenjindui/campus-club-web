@@ -399,3 +399,14 @@ export function checkBailPayMoney (str) {
     const reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
     return reg.test(str);
 }
+
+/**
+ * 校验分数在0-100之间
+ * @param str
+ * @returns {boolean}
+ */
+export function checkScore (str) {
+    const reg = /^1?[1-9]?\d([.]\d)?$/;
+    return reg.test(str);
+}
+

@@ -278,7 +278,6 @@ export default {
         },
         // /页面当前页
         handleCurrentChange(val){
-            // alert(val);
             //this.currentPage=val;
             store.saveIDlist("currentPage",val);
             this.search();
@@ -296,7 +295,6 @@ export default {
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data);
                         this.approvaledListData=[];
                         this.approvaledListData=successResponse.data.data.grid.list;
                         this.pageParmsSecond.total=successResponse.data.data.grid.total;
@@ -327,7 +325,6 @@ export default {
         },
         info(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",

@@ -112,7 +112,8 @@
       init(){
         this.$axios
                 .post("/api/clubNoticesDetail", {
-                  uuid:this.$route.query.uuid
+                  uuid:this.$route.query.uuid,
+                  userCode:store.fetchIDlist("userInfo").userCode,
                 },{headers: {
                     'content-type': 'application/json',
                     "token":store.fetchIDlist("token")  //token换成从缓存获取

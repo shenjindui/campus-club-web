@@ -108,7 +108,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="评分学年" :label-width="formLabelWidth" prop="stCd">
+                                        <el-form-item label="评分学年" :label-width="formLabelWidth" prop="schoolYear">
                                             <el-select v-model="addForm.schoolYear" placeholder="评分学年" >
                                                 <el-option
                                                         v-for="item in schoolYearList"
@@ -121,7 +121,7 @@
                                 </el-row>
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="评分学期" :label-width="formLabelWidth" prop="amountType">
+                                        <el-form-item label="评分学期" :label-width="formLabelWidth" prop="semesters">
                                             <el-select v-model="addForm.semesters" placeholder="评分学期" >
                                                 <el-option
                                                         v-for="item in semestersList"
@@ -205,31 +205,31 @@
                             <el-form :model="updateForm" ref="updateForm" :rules="rules" >
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="评分UUID" :label-width="formLabelWidth">
+                                        <el-form-item label="评分UUID" :label-width="formLabelWidth" prop="uuid">
                                             <el-input v-model.trim="updateForm.uuid" placeholder="评分UUID" :disabled="true"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="评审对象工号" :label-width="formLabelWidth">
+                                        <el-form-item label="评审对象工号" :label-width="formLabelWidth" prop="ratersAssociationCode">
                                             <el-input v-model.trim="updateForm.ratersAssociationCode" placeholder="评审对象编号" :disabled="true"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="评审对象名称" :label-width="formLabelWidth" >
+                                        <el-form-item label="评审对象名称" :label-width="formLabelWidth"  prop="ratersAssociationName">
                                             <el-input v-model="updateForm.ratersAssociationName" placeholder="评审对象名称" :disabled="true" ></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="得分" :label-width="formLabelWidth">
+                                        <el-form-item label="得分" :label-width="formLabelWidth" prop="score">
                                             <el-input v-model="updateForm.score" placeholder="得分" ></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="22">
-                                        <el-form-item label="请输入评分意见" :label-width="formLabelWidth">
+                                        <el-form-item label="请输入评分意见" :label-width="formLabelWidth" prop="ratersOpin">
                                             <el-input v-model.trim="updateForm.ratersOpin" placeholder="请输入评分意见"></el-input>
                                         </el-form-item>
                                     </el-col>
@@ -309,8 +309,8 @@
                                 <el-table-column prop="ratersOpin"  label="评分意见" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="ratersTypeDdct"  label="评审类型" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="score"  label="得分" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
@@ -400,6 +400,6 @@
 <script src="../../../style/js/clubScore/clubScoreByStsy.js">
 </script>
 <style scoped>
-    @import '../../../style/csss/common/common.css';/* 引入css文件*/
+    @import '../../../style/csss/common/common.css';
 </style>
 
