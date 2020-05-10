@@ -32,8 +32,6 @@
                             <el-col :span="9">
                                 <el-form-item label="活动类型" :label-width="formLabelWidth" prop="activityType">
                                     <el-select v-model="baseInfoForm.activityType" placeholder="活动类型">
-                                       <!-- <el-option label="理论学习类" value="0"></el-option>
-                                        <el-option label="兴趣爱好类" value="1"></el-option>-->
                                         <el-option
                                                 v-for="item in activityTypeList"
                                                 :key="item.dctTpCd"
@@ -144,7 +142,6 @@
                                 <el-table-column property="jobNum" label="社团审核人工号" width="200"></el-table-column>
                             </el-table>
                             <div class="pagination">
-                                <!-- :current-page="currentPage4"-->
                                 <el-pagination
                                         small
                                         layout="prev, pager, next"
@@ -160,12 +157,9 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
-
 <script src="../../../style/js/clubActivity/clubActivityAdd.js">
-
 </script>
 <style scoped>
     @import '../../../style/csss/clubActivity/clubActivity.css';

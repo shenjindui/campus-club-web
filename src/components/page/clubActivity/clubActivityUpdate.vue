@@ -32,8 +32,6 @@
                             <el-col :span="9">
                                 <el-form-item label="活动类型" :label-width="formLabelWidth" prop="activityType">
                                     <el-select v-model="baseInfoForm.activityType" placeholder="活动类型">
-                                        <!--<el-option label="理论学习类" value="0"></el-option>
-                                        <el-option label="兴趣爱好类" value="1"></el-option>-->
                                         <el-option
                                                 v-for="item in activityTypeList"
                                                 :key="item.dctTpCd"
@@ -160,12 +158,9 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
-
 <script src="../../../style/js/clubActivity/clubActivityUpdate.js">
-
 </script>
 <style scoped>
     @import '../../../style/csss/clubActivity/clubActivity.css';

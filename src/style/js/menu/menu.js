@@ -164,7 +164,6 @@ export default {
             visible:false,
             roleListData:[],
             selectMenuData:[],
-            //一级菜单
             small:true,
             parentListTotal:0,
             /**

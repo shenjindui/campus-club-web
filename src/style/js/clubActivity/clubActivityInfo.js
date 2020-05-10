@@ -14,11 +14,16 @@ const  checkIsBailPayMoney = (rule, value, callback) => {
     }
 }
 export default {
-    //强制刷新
+    /**
+     * 强制刷新
+     */
     inject:['reload'],
     data() {
         return {
             active: 0,
+            /**
+             * 基本信息表单
+             */
             baseInfoForm: {
                 activityName: '',
                 activitySpace: '',
@@ -32,6 +37,9 @@ export default {
                 stCd:'',
                 uuid:''
             },
+            /**
+             * 时间控件选择器
+             */
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -59,18 +67,39 @@ export default {
                     }
                 }]
             },
+            /**
+             * 意见表单
+             */
             opinionForm:{
                 opinion:''
             },
+            /**
+             * 设置el-form-item 的长度
+             */
             formLabelWidth: '100px',
+            /**
+             * 文件列表数据
+             */
             fileTableData:[],
+            /**
+             * token值
+             */
             token: {token: store.fetchIDlist("token") },
+            /**
+             * 用户编号
+             */
             userCode:store.fetchIDlist("userInfo").userCode,
+            /**
+             * 隐藏的参数
+             */
             hideParms:{
                 uuid:'',
                 stCd:'',
                 sysBusinessCode:''
             },
+            /**
+             * 表单验证规则
+             */
             rules: {
                 activityName: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
                 activitySpace: [{ required: true, message: "请输入活动地点", trigger: "blur" }],
@@ -80,12 +109,17 @@ export default {
                 foundsNum: [{ required: true, message: "请输入资金预算金额", trigger: "blur" },
                     { validator: checkIsBailPayMoney ,trigger: "blur" }],
             },
-
-            //工作流选择对话框
+            /**
+             * 工作流选择对话框
+             */
             workflowTableVisible:false,
-            //审核人列表
+            /**
+             * 审核人列表
+             */
             approverDataList:[],
-            //异常对话框
+            /**
+             * 后台500异常对话框
+             */
             dialogVisible:false,
             errorMessage:'',
             uuid:''
@@ -96,50 +130,27 @@ export default {
         this.initDdct();
     },
     methods: {
-        //对话框确定按钮
+        /**
+         * 后台500对话框确定按钮
+         */
         handleClose() {
             this.dialogVisible=false;
-            store.saveIDlist("token",null);
-            this.$router.push("/");
-        },
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
+            //store.saveIDlist("token",null);
+            //this.$router.push("/");
         },
         next() {
             if (this.active++ > 2) {
-                alert('这是最后一步喽');
             }
         },
         step() {
             if (this.active-- <0) {
-                alert('这是第一步呢');
             }
         },
         onSubmit() {
-            console.log('submit!');
         },
+        /**
+         * 文件列表
+         */
         getFileList(){
             this.$axios
                 .post("/api/fileList", {
@@ -151,7 +162,7 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -174,16 +185,22 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 返回事件
+         */
         back(){
             this.$router.push("/clubActivity");
         },
+        /**
+         * 页面加载初始化字典数据
+         */
         initDdct(){
             this.$axios
                 .post("/api/clubActivityAddInit", {
                     "dctKey":"activityType"
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -204,13 +221,16 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 页面加载初始化数据
+         */
         init(){
             this.$axios
                 .post("/api/clubActivityDetail", {
                     uuid:this.$route.query.uuid,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {

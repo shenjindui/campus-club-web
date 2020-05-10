@@ -19,6 +19,9 @@ export default {
     data() {
         return {
             active: 0,
+            /**
+             * 表单基本字段
+             */
             baseInfoForm: {
                 activityName: '',
                 activitySpace: '',
@@ -33,6 +36,9 @@ export default {
                 uuid:''
             },
             formDate : [],
+            /**
+             * 时间控件选择器
+             */
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -60,18 +66,39 @@ export default {
                     }
                 }]
             },
+            /**
+             * 意见表单
+             */
             opinionForm:{
                 opinion:''
             },
+            /**
+             * 设置el-form-item 的长度
+             */
             formLabelWidth: '100px',
+            /**
+             * 文件列表
+             */
             fileTableData:[],
+            /**
+             * token
+             */
             token: {token: store.fetchIDlist("token") },
+            /**
+             * 用户编码
+             */
             userCode:store.fetchIDlist("userInfo").userCode,
+            /**
+             * 隐藏的参数
+             */
             hideParms:{
                 uuid:'',
                 stCd:'',
                 sysBusinessCode:''
             },
+            /**
+             * 表单验证规则
+             */
             rules: {
                 activityName: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
                 activitySpace: [{ required: true, message: "请输入活动地点", trigger: "blur" }],
@@ -81,18 +108,21 @@ export default {
                 foundsNum: [{ required: true, message: "请输入资金预算金额", trigger: "blur" },
                     { validator: checkIsBailPayMoney ,trigger: "blur" }],
             },
-
-            //工作流选择对话框
+            /**
+             * 工作流选择对话框
+             */
             workflowTableVisible:false,
-            //审核人列表
+            /**
+             * 审核人列表
+             */
             approverDataList:[],
-
-            //异常对话框
+            /**
+             * 异常对话框
+             */
+            //
             dialogVisible:false,
             errorMessage:'',
             uuid:''
-
-
         };
     },
     created () {
@@ -100,40 +130,21 @@ export default {
         this.initDdct();
     },
     methods: {
-        //对话框确定按钮
+        /**
+         * 后台500对话框确定按钮
+         */
         handleClose() {
             this.dialogVisible=false;
-            store.saveIDlist("token",null);
-            this.$router.push("/");
+            //store.saveIDlist("token",null);
+            //this.$router.push("/");
         },
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
-        },
-        //文件上传成功调用的事件
+        /**
+         * 文件上传成功调用的事件
+         * @param response
+         * @param file
+         * @param fileList
+         */
         fileUploadSuccess(response, file, fileList) {
-            console.log(response);
             if (response.status === 200) {
                 let successMessage = response.description;
                 this.$message({
@@ -160,25 +171,28 @@ export default {
                     type: 'warning'
                 })
             }
-            //alert('success');
         },
-        //文件上传失败调用的事件
+        /**
+         * 文件上传失败调用的事件
+         * @param err
+         * @param file
+         * @param fileList
+         */
         fileUploadError(err, file, fileList) {
-            alert('系统异常,上传失败！');
         },
         next() {
             if (this.active++ > 2) {
-                alert('这是最后一步喽');
             }
         },
         step() {
             if (this.active-- <0) {
-                alert('这是第一步呢');
             }
         },
         onSubmit() {
-            console.log('submit!');
         },
+        /**
+         * 获取文件列表
+         */
         getFileList(){
             this.$axios
                 .post("/api/fileList", {
@@ -190,11 +204,10 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data.grid.list);
                         this.fileTableData=[];
                         this.fileTableData=successResponse.data.data.grid.list;
                         this.total='';
@@ -213,10 +226,19 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        //移除文件
+        /**
+         * 文件详情 todo
+         * @param index
+         * @param fileTableData
+         */
         detailFile(index,fileTableData){
             alert(fileTableData[index].uuid);
         },
+        /**
+         * 移除文件
+         * @param index
+         * @param fileTableData
+         */
         deleteFile(index,fileTableData){
             this.$axios
                 .post("/api/deleteFile", {
@@ -225,7 +247,7 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -249,6 +271,10 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 基本信息保存
+         * @param baseInfoForm
+         */
         baseInfoSave(baseInfoForm){
             this.$refs[baseInfoForm].validate(valid => {
                 if (valid) {
@@ -264,7 +290,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -304,7 +330,6 @@ export default {
                                     background: 'rgba(0, 0, 0, 0.7)'
                                 });
                                 setTimeout(() => {
-                                    // this.fullscreenLoading = false;
                                     loading.close();
                                 }, 5000);
                                 window.localStorage.clear();
@@ -317,7 +342,11 @@ export default {
                 }
             });
         },
-        opinionSave(opinionForm){  //申请理由保存
+        /**
+         * 申请理由保存
+         * @param opinionForm
+         */
+        opinionSave(opinionForm){
             this.$refs[opinionForm].validate(valid => {
                 if (valid) {
                     this.$axios
@@ -360,9 +389,16 @@ export default {
                 }
             });
         },
+        /**
+         * 返回按钮事件
+         */
         back(){
             this.$router.push("/clubActivity");
         },
+        /**
+         * 启动并发送事件
+         * @param opinionForm
+         */
         startAndSubmit(opinionForm){
             if(this.hideParms.sysBusinessCode===''){
                 this.$message({
@@ -379,12 +415,11 @@ export default {
                             }, {
                                 headers: {
                                     'content-type': 'application/json',
-                                    "token": store.fetchIDlist("token")  //token换成从缓存获取
+                                    "token": store.fetchIDlist("token")
                                 }
                             })
                             .then(successResponse => {
                                 if (successResponse.data.status === 200) {
-                                    console.log(successResponse.data.data.grid.list)
                                     this.approverDataList = [];
                                     this.approverDataList = successResponse.data.data.grid.list;
                                     this.pageParms.total = successResponse.data.data.grid.total;
@@ -407,13 +442,16 @@ export default {
                 });
             }
         },
+        /**
+         * 数据字典初始化
+         */
         initDdct(){
             this.$axios
                 .post("/api/clubActivityAddInit", {
                     "dctKey":"activityType"
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -434,13 +472,16 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 页面加载初始化
+         */
         init(){
             this.$axios
                 .post("/api/clubActivityDetail", {
                     uuid:this.$route.query.uuid,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -465,9 +506,11 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        confirmAndSubmit(){  //提交审核确定按钮事件
+        /**
+         * 确认发送下一岗，提交审核确定按钮事件
+         */
+        confirmAndSubmit(){
             const selectData=this.$refs.approverListTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -489,7 +532,7 @@ export default {
                     }, {
                         headers: {
                             'content-type': 'application/json',
-                            "token": store.fetchIDlist("token")  //token换成从缓存获取
+                            "token": store.fetchIDlist("token")
                         }
                     })
                     .then(successResponse => {
