@@ -31,19 +31,23 @@ export default {
             opinionForm:{
                 opinion:''
             },
+            /**
+             * 表单校验规则
+             */
             rules: {
-                opinion: [
-                    { required: true, message: "请填写申请理由", trigger: "blur" }
-                ],
-                /*url: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
-                sort: [{ required: true, message: "请输入菜单排序码", trigger: "blur" },
-                    { type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
-                            return Number(value);
-                        }}
-                ],
-                leafFlagCd :[{ required: true, message: "请选择", trigger: "blur" }],
-                parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
-*/
+                schoolNo: [{ required: true, message: "请选择社团所属学校", trigger: "blur" }],
+                collegeNo: [{ required: true, message: "请选择社团所属学院", trigger: "blur" }],
+                stNature: [{ required: true, message: "请选择社团所属性质", trigger: "blur" }],
+                stName: [{ required: true, message: "请填写社团名称", trigger: "blur" }],
+                stDesc: [{ required: true, message: "请填写社团描述", trigger: "blur" }],
+                remark: [{ required: true, message: "请填写备注", trigger: "blur" }],
+                stChargeName: [{ required: true, message: "请填写社团负责人", trigger: "blur" }],
+                stChargePhone: [{ required: true, message: "请填写负责人手机号", trigger: "blur" },
+                    { validator: checkisPhone ,trigger: "blur" }],
+                stChargeSno: [{ required: true, message: "请填写负责人学号", trigger: "blur" },
+                    { validator: checkisJobNum ,trigger: "blur" }],
+                opinion: [{ required: true, message: "请申请理由", trigger: "blur" }],
+
             },
             //工作流选择对话框
             workflowTableVisible:false,

@@ -1,11 +1,41 @@
+/**
+ * 引入存储的js
+ */
 import store from "../../../store/store";
-
+import {
+    validatePhone,isJobNum
+} from "../../../utils/validate/validate"; //引入自定义的校验js
+const  checkisPhone = (rule, value, callback) => {
+    if(!value){
+        return callback(new Error("手机号码不能为空"));
+    }else{
+        if (validatePhone(value)) {
+            callback();
+        }else{
+            return callback(new Error("手机号码格式不正确"));
+        }
+    }
+}
+const  checkisJobNum = (rule, value, callback) => {
+    if(!value){
+        return callback(new Error("学号不能为空"));
+    }else{
+        if (isJobNum(value)) {
+            callback();
+        }else{
+            return callback(new Error("学号格式不正确"));
+        }
+    }
+}
 export default {
     //强制刷新
     inject:['reload'],
     data() {
         return {
             active: 0,
+            /**
+             * 基本信息表单
+             */
             baseInfoForm: {
                 schoolNo: '',
                 collegeNo: '',
@@ -18,76 +48,125 @@ export default {
                 stChargeSno:'',
                 stCd:'',
                 uuid:''
-
             },
+            /**
+             * 意见表单
+             */
             opinionForm:{
                 opinion:''
             },
+            /**
+             * 设置el-form-item 的长度
+             */
             formLabelWidth: '100px',
+            /**
+             * 文件列表
+             */
             fileTableData:[],
+            /**
+             * token值
+             */
             token: {token: store.fetchIDlist("token") },
+            /**
+             * 用户编码
+             */
             userCode:store.fetchIDlist("userInfo").userCode,
+            /**
+             * 隐藏的参数
+             */
             hideParms:{
                 uuid:'',
                 stCd:'',
                 sysBusinessCode:''
             },
+            /**
+             * 表单校验规则
+             */
             rules: {
-                opinion: [
-                    { required: true, message: "请填写申请理由", trigger: "blur" }
-                ],
+                schoolNo: [{ required: true, message: "请选择社团所属学校", trigger: "blur" }],
+                collegeNo: [{ required: true, message: "请选择社团所属学院", trigger: "blur" }],
+                stNature: [{ required: true, message: "请选择社团所属性质", trigger: "blur" }],
+                stName: [{ required: true, message: "请填写社团名称", trigger: "blur" }],
+                stDesc: [{ required: true, message: "请填写社团描述", trigger: "blur" }],
+                remark: [{ required: true, message: "请填写备注", trigger: "blur" }],
+                stChargeName: [{ required: true, message: "请填写社团负责人", trigger: "blur" }],
+                stChargePhone: [{ required: true, message: "请填写负责人手机号", trigger: "blur" },
+                    { validator: checkisPhone ,trigger: "blur" }],
+                stChargeSno: [{ required: true, message: "请填写负责人学号", trigger: "blur" },
+                    { validator: checkisJobNum ,trigger: "blur" }],
+                opinion: [{ required: true, message: "请申请理由", trigger: "blur" }],
+
             },
-
-            //工作流选择对话框
+            /**
+             * 工作流选择对话框
+             */
             workflowTableVisible:false,
-            //审核人列表
+            /**
+             * 审核人列表
+             */
             approverDataList:[],
-
-            //异常对话框
+            /**
+             * 后台500异常对话框
+             */
             dialogVisible:false,
-            errorMessage:''
-
-
+            errorMessage:'',
+            /**
+             * 添加页面加载初始化
+             */
+            stNatureList:[],
+            schoolCdList:[],
+            collegeCdList:[],
         };
     },
     created () {
-        //初始文件列表
+        this.init();
     },
     methods: {
-        //对话框确定按钮
+        /**
+         * 页面加载初始化
+         */
+        init(){
+            this.$axios
+                .post("/api/clubAddInit", {
+                },{headers: {
+                        'content-type': 'application/json',
+                        "token":store.fetchIDlist("token")
+                    }})
+                .then(successResponse => {
+                    if (successResponse.data.status === 200) {
+                        this.stNatureList = successResponse.data.data.stNatureList;
+                        this.collegeCdList = successResponse.data.data.collegeCdList;
+                        this.schoolCdList = successResponse.data.data.schoolCdList;
+
+                    }
+                    if (successResponse.data.status === 400) {
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'warning'
+                        })
+                    }
+                    if (successResponse.data.status === 500) { //后台异常时
+                        this.errorMessage =successResponse.data.description;
+                    }
+                })
+                .catch(failResponse => {});
+        },
+        /**
+         * 后台500 对话框确定按钮
+         */
         handleClose() {
             this.dialogVisible=false;
-            store.saveIDlist("token",null);
-            this.$router.push("/");
+            //store.saveIDlist("token",null);
+            //this.$router.push("/");
         },
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
-        },
-        //文件上传成功调用的事件
+        /**
+         * 文件上传成功调用的事件
+         * @param response
+         * @param file
+         * @param fileList
+         */
         fileUploadSuccess(response, file, fileList) {
-            console.log(response);
             if (response.status === 200) {
                 let successMessage = response.description;
                 this.$message({
@@ -95,9 +174,7 @@ export default {
                     top: 200,
                     type: 'success',
                 })
-                //this.reload();
                 this.getFileList();
-
             }
             if (response.status === 400) {
                 let warnMessage = response.description;
@@ -105,7 +182,7 @@ export default {
                     message: warnMessage,
                     type: 'warning'
                 })
-                this.reload();
+               // this.reload();
             }
             if (response.status === 500) { //后台异常时
                 let warnMessage = response.description;
@@ -114,26 +191,29 @@ export default {
                     type: 'warning'
                 })
             }
-            //alert('success');
         },
-        //文件上传失败调用的事件
+        /**
+         * 文件上传失败调用的事件
+         * @param err
+         * @param file
+         * @param fileList
+         */
         fileUploadError(err, file, fileList) {
-            console.log(file);
             alert('系统异常,上传失败！');
         },
         next() {
             if (this.active++ > 2) {
-                alert('这是最后一步喽');
             }
         },
         step() {
             if (this.active-- <0) {
-                alert('这是第一步呢');
             }
         },
         onSubmit() {
-            console.log('submit!');
         },
+        /**
+         * 获取文件列表
+         */
         getFileList(){
             this.$axios
                 .post("/api/fileList", {
@@ -145,11 +225,10 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data.grid.list);
                         this.fileTableData=[];
                         this.fileTableData=successResponse.data.data.grid.list;
                         this.total='';
@@ -168,10 +247,19 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        //移除文件
+        /**
+         * 文件详情
+         * @param index
+         * @param fileTableData
+         */
         detailFile(index,fileTableData){
             alert(fileTableData[index].uuid);
         },
+        /** todo
+         * 移除文件
+         * @param index
+         * @param fileTableData
+         */
         deleteFile(index,fileTableData){
             this.$axios
                 .post("/api/deleteFile", {
@@ -180,7 +268,7 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -204,11 +292,13 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 基本信息保存
+         * @param baseInfoForm
+         */
         baseInfoSave(baseInfoForm){
             this.$refs[baseInfoForm].validate(valid => {
-                console.log(JSON.stringify(this.baseInfoForm))
                 if (valid) {
-                    console.log(JSON.stringify(baseInfoForm));
                     this.$axios
                         .post("/api/clubAdd", {
                             schoolNo:this.baseInfoForm.schoolNo,
@@ -223,7 +313,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -263,7 +353,6 @@ export default {
                                     background: 'rgba(0, 0, 0, 0.7)'
                                 });
                                 setTimeout(() => {
-                                    // this.fullscreenLoading = false;
                                     loading.close();
                                 }, 5000);
                                 window.localStorage.clear();
@@ -272,14 +361,15 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
+        /**
+         * 意见保存
+         * @param opinionForm
+         */
         opinionSave(opinionForm){  //申请理由保存
-            console.log(this.baseInfoForm.uuid)
             this.$refs[opinionForm].validate(valid => {
                 if (valid) {
                     this.$axios
@@ -289,7 +379,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -322,9 +412,16 @@ export default {
                 }
             });
         },
+        /**
+         * 返回按钮事件
+         */
         back(){
             this.$router.push("/clubinfo");
         },
+        /**
+         * 启动并发送
+         * @param opinionForm
+         */
         startAndSubmit(opinionForm){
             if(this.hideParms.sysBusinessCode===''){
                 this.$message({
@@ -341,12 +438,11 @@ export default {
                             }, {
                                 headers: {
                                     'content-type': 'application/json',
-                                    "token": store.fetchIDlist("token")  //token换成从缓存获取
+                                    "token": store.fetchIDlist("token")
                                 }
                             })
                             .then(successResponse => {
                                 if (successResponse.data.status === 200) {
-                                    console.log(successResponse.data.data.grid.list)
                                     this.approverDataList = [];
                                     this.approverDataList = successResponse.data.data.grid.list;
                                     this.pageParms.total = successResponse.data.data.grid.total;
@@ -369,9 +465,11 @@ export default {
                 });
             }
         },
-        confirmAndSubmit(){  //提交审核确定按钮事件
+        /**
+         * 提交审核确定按钮事件
+         */
+        confirmAndSubmit(){
             const selectData=this.$refs.approverListTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -383,7 +481,6 @@ export default {
                     type: 'warning'
                 })
             }else {
-                //console.log("选择的数据为;"+JSON.stringify(selectData[0]));
                 this.$axios
                     .post("/api/workFlowBusinessAdd", {
                         workFlowCode: selectData[0].workFlowCode,
@@ -394,12 +491,11 @@ export default {
                     }, {
                         headers: {
                             'content-type': 'application/json',
-                            "token": store.fetchIDlist("token")  //token换成从缓存获取
+                            "token": store.fetchIDlist("token")
                         }
                     })
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
-                            // console.log(successResponse.data.data.grid.list)
                             this.workflowTableVisible = false;
                             let successMessage = successResponse.data.description;
                             this.$message({

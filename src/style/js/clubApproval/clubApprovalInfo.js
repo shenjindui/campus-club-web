@@ -6,6 +6,9 @@ export default {
     data() {
         return {
             active: 0,
+            /**
+             * 基本信息
+             */
             baseInfoForm: {
                 schoolNo: '',
                 collegeNo: '',
@@ -19,57 +22,41 @@ export default {
                 stCd:'',
                 createOpinion:''
             },
+            /**
+             * 设置el-form-item 的长度
+             */
             formLabelWidth: '100px',
+            /**
+             * 文件列表
+             */
             fileTableData:[],
+            /**
+             * token
+             */
             token: {token: store.fetchIDlist("token") },
+            /**
+             * 用户编码
+             */
             userCode:store.fetchIDlist("userInfo").userCode,
-
         };
     },
     created () {
-        //初始文件列表
         this.init();
-
     },
     methods: {
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
-        },
         next() {
             if (this.active++ > 2) {
-                alert('这是最后一步喽');
             }
         },
         step() {
             if (this.active-- <0) {
-                alert('这是第一步呢');
             }
         },
         onSubmit() {
-            console.log('submit!');
         },
+        /**
+         * 文件列表
+         */
         getFileList(){
             this.$axios
                 .post("/api/fileList", {
@@ -85,7 +72,6 @@ export default {
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data.grid.list);
                         this.fileTableData=[];
                         this.fileTableData=successResponse.data.data.grid.list;
                         this.total='';
@@ -104,17 +90,24 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        //移除文件
+        /**
+         * 文件详情
+         * @param index
+         * @param fileTableData
+         */
         detailFile(index,fileTableData){
             alert(fileTableData[index].uuid);
         },
+        /**
+         * 页面加载初始化
+         */
         init(){
             this.$axios
                 .post("/api/clubdetail", {
                    uuid:this.$route.query.uuid,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -134,9 +127,11 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 返回按钮事件
+         */
         back(){
             this.$router.push("/clubinfo");
-
         }
     }
 }

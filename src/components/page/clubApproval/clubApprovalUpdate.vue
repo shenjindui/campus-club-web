@@ -169,5 +169,5 @@
 
 </script>
 <style scoped>
-    @import '../../../style/csss/clubApproval/clubApproval.css';/* 引入css文件*/
+    @import '../../../style/csss/clubApproval/clubApproval.css';
 </style>

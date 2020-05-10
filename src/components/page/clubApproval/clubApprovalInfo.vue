@@ -93,8 +93,8 @@
                             <el-table-column prop="fileTpCd" label="文件后缀" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                             <el-table-column prop="fileSize" label="文件大小" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                             <el-table-column prop="fileRte" label="保存路径"  width="200" align="center":show-overflow-tooltip="true"></el-table-column>
-                            <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="165" align="center" :show-overflow-tooltip="true"></el-table-column>
-                            <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" align="165" :show-overflow-tooltip="true"></el-table-column>
+                            <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="165" align="center" :show-overflow-tooltip="true"></el-table-column>
+                            <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="165" :show-overflow-tooltip="true"></el-table-column>
                             <el-table-column fixed="right" label="操作" width="120">
                                 <template slot-scope="scope">
                                     <el-button @click.native.prevent="detailFile(scope.$index,fileTableData)" type="text" size="small">查看</el-button>
@@ -117,13 +117,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
-
 <script src="../../../style/js/clubApproval/clubApprovalInfo.js">
-
 </script>
 <style scoped>
-    @import '../../../style/csss/clubApproval/clubApproval.css';/* 引入css文件*/
+    @import '../../../style/csss/clubApproval/clubApproval.css';
 </style>

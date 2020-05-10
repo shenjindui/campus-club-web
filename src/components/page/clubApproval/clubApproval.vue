@@ -23,63 +23,73 @@
             </el-dialog>
             <div class="rightForm">
                 <div class="baseInfoForm">
-                    <el-form ref="baseInfoForm" :model="baseInfoForm" label-width="100px" :disabled="active===0?false:true">
+                    <el-form :model="baseInfoForm" ref="baseInfoForm"
+                              :rules="rules" label-width="120px" :disabled="active===0?false:true">
                         <el-row :gutter="20" type="flex">
                             <el-col :span="9">
-                                <el-form-item label="社团所属学校">
+                                <el-form-item label="社团所属学校" prop="schoolNo">
                                     <el-select v-model="baseInfoForm.schoolNo" placeholder="请选择学校">
-                                        <el-option label="测试学校一" value="fjut00001"></el-option>
-                                        <el-option label="测试学校二" value="fzu00001"></el-option>
+                                        <el-option
+                                                v-for="item in schoolCdList"
+                                                :key="item.dctTpCd"
+                                                :label="item.dctTpNm"
+                                                :value="item.dctVal"/>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="9">
-                                <el-form-item label="社团所属学院">
+                                <el-form-item label="社团所属学院" prop="collegeNo">
                                     <el-select v-model="baseInfoForm.collegeNo" placeholder="请选择学院">
-                                        <el-option label="国脉信息学院" value="guomai00001"></el-option>
-                                        <el-option label="土木工程" value="tumu00002"></el-option>
+                                        <el-option
+                                                v-for="item in collegeCdList"
+                                                :key="item.dctTpCd"
+                                                :label="item.dctTpNm"
+                                                :value="item.dctVal"/>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="9">
-                                <el-form-item label="社团所属性质" :label-width="formLabelWidth">
+                                <el-form-item label="社团所属性质" prop="stNature">
                                     <el-select v-model="baseInfoForm.stNature" placeholder="请选择社团性质">
-                                        <el-option label="理论学习类" value="0"></el-option>
-                                        <el-option label="兴趣爱好类" value="1"></el-option>
+                                        <el-option
+                                                v-for="item in stNatureList"
+                                                :key="item.dctTpCd"
+                                                :label="item.dctTpNm"
+                                                :value="item.dctVal"/>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row :gutter="20" type="flex">
                             <el-col :span="9">
-                                <el-form-item label="社团名称">
+                                <el-form-item label="社团名称" prop="stName">
                                     <el-input v-model="baseInfoForm.stName" placeholder="社团名称" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="9">
-                                <el-form-item label="社团描述">
+                                <el-form-item label="社团描述"  prop="stDesc">
                                     <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="baseInfoForm.stDesc"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="9">
-                                <el-form-item label="备注">
+                                <el-form-item label="备注"  prop="remark">
                                     <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="baseInfoForm.remark"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                         <el-row :gutter="20" type="flex">
                             <el-col :span="9">
-                                <el-form-item label="社团负责人">
+                                <el-form-item label="社团负责人"  prop="stChargeName">
                                     <el-input v-model="baseInfoForm.stChargeName" placeholder="社团负责人" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="9">
-                                <el-form-item label="负责人手机号">
+                                <el-form-item label="负责人手机号"  prop="stChargePhone">
                                     <el-input v-model="baseInfoForm.stChargePhone" placeholder="负责人手机号" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="9">
-                                <el-form-item label="负责人学号" :label-width="formLabelWidth">
+                                <el-form-item label="负责人学号"  prop="stChargeSno">
                                     <el-input v-model="baseInfoForm.stChargeSno" placeholder="负责人学号" clearable></el-input>
                                     <input type="hidden" v-model="hideParms.uuid"></input>
                                     <input type="hidden" v-model="hideParms.stCd"></input>
