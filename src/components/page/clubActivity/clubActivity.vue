@@ -30,8 +30,8 @@
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
-                                    start-placeholder="预计活动开始时间"
-                                    end-placeholder="预计活动结束时间"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束时间"
                                     :picker-options="pickerOptions">
                             </el-date-picker>
                             <el-button type="primary" icon="search" @click="search()">搜索</el-button>
@@ -60,10 +60,10 @@
                                 <el-table-column prop="activityDsc" label="活动内容" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="activityAssessor" label="活动考核人" width="110" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="activityScore" label="活动考核分数" width="110" align="center" :show-overflow-tooltip="true" ></el-table-column>
-                                <el-table-column prop="startTime" :formatter="dateformat" label="预计活动开始时间" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="endTime" :formatter="dateformat" label="预计结束开始时间" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="startTime" :formatter="dateFormate.dateformatStartTime" label="预计活动开始时间" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="endTime" :formatter="dateFormate.dateformatEndTime" label="预计结束开始时间" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">

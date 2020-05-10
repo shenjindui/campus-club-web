@@ -107,6 +107,7 @@ export default {
                 activityDsc: [{ required: true, message: "请输入活动内容", trigger: "blur" }],
                 foundsNum: [{ required: true, message: "请输入资金预算金额", trigger: "blur" },
                     { validator: checkIsBailPayMoney ,trigger: "blur" }],
+                opinion: [{ required: true, message: "请输入申请理由", trigger: "blur" }],
             },
             /**
              * 工作流选择对话框
@@ -347,6 +348,13 @@ export default {
          * @param opinionForm
          */
         opinionSave(opinionForm){
+            if(this.hideParms.sysBusinessCode===''){
+                this.$message({
+                    message: "请先完善基本信息！",
+                    type: 'warning'
+                })
+                return ;
+            }
             this.$refs[opinionForm].validate(valid => {
                 if (valid) {
                     this.$axios
