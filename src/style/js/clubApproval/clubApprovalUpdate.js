@@ -49,21 +49,27 @@ export default {
                 opinion: [{ required: true, message: "请申请理由", trigger: "blur" }],
 
             },
-            //工作流选择对话框
+            /**
+             * 工作流选择对话框
+             */
             workflowTableVisible:false,
-            //审核人列表
+            /**
+             * 审核人列表
+             */
             approverDataList:[],
 
-            //异常对话框
+            /**
+             * 后台异常500 异常对话框
+             */
             dialogVisible:false,
             errorMessage:''
-
         };
     },
     created () {
-        //初始文件列表
+        /**
+         * 页面加载初始化
+         */
         this.init();
-
     },
     methods: {
         //对时间进行格式化
@@ -93,25 +99,30 @@ export default {
         },
         next() {
             if (this.active++ > 2) {
-                alert('这是最后一步喽');
             }
         },
         step() {
             if (this.active-- <0) {
-                alert('这是第一步呢');
             }
         },
         onSubmit() {
-            console.log('submit!');
         },
-        //文件上传失败调用的事件
+        /**
+         * 文件上传失败调用的事件
+         * @param err
+         * @param file
+         * @param fileList
+         */
         fileUploadError(err, file, fileList) {
-            console.log(file);
-            alert('err');
+            alert('系统异常，请联系管理员');
         },
-        //文件上传成功调用的事件
+        /**
+         * 文件上传成功调用的事件
+         * @param response
+         * @param file
+         * @param fileList
+         */
         fileUploadSuccess(response, file, fileList) {
-            console.log(response);
             if (response.status === 200) {
                 let successMessage = response.description;
                 this.$message({
@@ -121,7 +132,6 @@ export default {
                 })
                 this.reload();
                 this.getFileList();
-
             }
             if (response.status === 400) {
                 let warnMessage = response.description;
@@ -129,7 +139,6 @@ export default {
                     message: warnMessage,
                     type: 'warning'
                 })
-                //this.reload();
             }
             if (response.status === 500) { //后台异常时
                 let warnMessage = response.description;
@@ -138,8 +147,12 @@ export default {
                     type: 'warning'
                 })
             }
-            //alert('success');
         },
+        /**
+         * 删除文件
+         * @param index
+         * @param fileTableData
+         */
         deleteFile(index,fileTableData){
             this.$axios
                 .post("/api/deleteFile", {
@@ -148,7 +161,7 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -172,6 +185,9 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 获取文件列表
+         */
         getFileList(){
             this.$axios
                 .post("/api/fileList", {
@@ -183,11 +199,10 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data.grid.list);
                         this.fileTableData=[];
                         this.fileTableData=successResponse.data.data.grid.list;
                         this.total='';
@@ -206,17 +221,24 @@ export default {
                 })
                 .catch(failResponse => {});
         },
-        //移除文件
+        /**
+         * 文件详情
+         * @param index
+         * @param fileTableData
+         */
         detailFile(index,fileTableData){
             alert(fileTableData[index].uuid);
         },
+        /**
+         * 初始化函数
+         */
         init(){
             this.$axios
                 .post("/api/clubdetail", {
                    uuid:this.$route.query.uuid,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -239,13 +261,19 @@ export default {
                 })
                 .catch(failResponse => {});
         },
+        /**
+         * 返回按钮事件
+         */
         back(){
             this.$router.push("/clubinfo");
             this.reload();
         },
+        /**
+         * 基本信息保存事件
+         * @param baseInfoForm
+         */
         baseInfoSave(baseInfoForm){
             this.$refs[baseInfoForm].validate(valid => {
-                console.log(JSON.stringify(this.baseInfoForm))
                 if (valid) {
                     this.$axios
                         .post("/api/clubAdd", {
@@ -263,10 +291,9 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
-                            console.log(JSON.stringify(successResponse))
                             if (successResponse.data.status === 200) {
                                 this.hideParms.uuid=successResponse.data.data.uuid;
                                 this.hideParms.stCd=successResponse.data.data.stCd;
@@ -277,10 +304,7 @@ export default {
                                     top:200,
                                     type: 'success',
                                 })
-                               // this.dialogFormVisible=false;
-                                //this.init();
                                 this.getFileList();
-
                             }
                             if (successResponse.data.status === 400) {
                                 let warnMessage = successResponse.data.description;
@@ -302,7 +326,6 @@ export default {
                                     background: 'rgba(0, 0, 0, 0.7)'
                                 });
                                 setTimeout(() => {
-                                    // this.fullscreenLoading = false;
                                     loading.close();
                                 }, 5000);
                                 window.localStorage.clear();
@@ -311,13 +334,15 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
-        opinionSave(opinionForm){  //申请理由保存
+        /**
+         * 申请理由保存
+         * @param opinionForm
+         */
+        opinionSave(opinionForm){
             this.$refs[opinionForm].validate(valid => {
                 if (valid) {
                     this.$axios
@@ -327,7 +352,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -360,8 +385,11 @@ export default {
                 }
             });
         },
+        /**
+         * 启动并发送按钮事件
+         * @param opinionForm
+         */
         startAndSubmit(opinionForm){
-            console.log("------"+JSON.stringify(this.hideParms))
             if(this.hideParms.sysBusinessCode===''){
                 this.$message({
                     message: "请先完善基本信息！",
@@ -377,12 +405,11 @@ export default {
                             }, {
                                 headers: {
                                     'content-type': 'application/json',
-                                    "token": store.fetchIDlist("token")  //token换成从缓存获取
+                                    "token": store.fetchIDlist("token")
                                 }
                             })
                             .then(successResponse => {
                                 if (successResponse.data.status === 200) {
-                                    console.log(successResponse.data.data.grid.list)
                                     this.approverDataList = [];
                                     this.approverDataList = successResponse.data.data.grid.list;
                                     this.pageParms.total = successResponse.data.data.grid.total;
@@ -405,9 +432,11 @@ export default {
                 });
             }
         },
-        confirmAndSubmit(){  //提交审核确定按钮事件
+        /**
+         * 提交审核确定按钮事件
+         */
+        confirmAndSubmit(){
             const selectData=this.$refs.approverListTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -419,7 +448,6 @@ export default {
                     type: 'warning'
                 })
             }else {
-                //console.log("选择的数据为;"+JSON.stringify(selectData[0]));
                 this.$axios
                     .post("/api/workFlowBusinessAdd", {
                         workFlowCode: selectData[0].workFlowCode,
@@ -430,12 +458,11 @@ export default {
                     }, {
                         headers: {
                             'content-type': 'application/json',
-                            "token": store.fetchIDlist("token")  //token换成从缓存获取
+                            "token": store.fetchIDlist("token")
                         }
                     })
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
-                            // console.log(successResponse.data.data.grid.list)
                             this.workflowTableVisible = false;
                             let successMessage = successResponse.data.description;
                             this.$message({

@@ -68,7 +68,7 @@ export default {
 
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
