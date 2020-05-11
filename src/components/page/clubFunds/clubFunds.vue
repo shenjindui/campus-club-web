@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -269,11 +268,7 @@
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
-
 <script src="../../../style/js/clubFunds/clubFunds.js">
 </script>
 <style scoped>

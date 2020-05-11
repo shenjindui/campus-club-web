@@ -288,8 +288,11 @@ export default {
                         })
                     }
                     if (successResponse.data.status === 500) { //后台异常时
-                        this.errorMessage =successResponse.data.description;
-                        this.dialogVisible=true;
+                        let warnMessage = successResponse.data.description;
+                        this.$message({
+                            message: warnMessage,
+                            type: 'warning'
+                        })
                     }
                 })
                 .catch(failResponse => {});

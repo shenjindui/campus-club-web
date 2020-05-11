@@ -30,6 +30,17 @@
                     <div class="user-info-list">登录时间：<span>{{ userInfo.lastLoginTime }}</span></div>
                     <div class="user-info-list">登录地点：<span>{{ userInfo.lastLoginAddress }}</span></div>
                 </el-card>
+                <el-dialog
+                        title="提示"
+                        :visible.sync="dialogVisible"
+                        width="30%"
+                >
+                    <span >{{errorMessage}}</span>
+                    <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="handleClose()">确 定</el-button>
+                     </span>
+                </el-dialog>
                 <el-dialog title="用户信息完善页面" :visible.sync="updateFormVisible" @close="UpdateCancle('updateForm')">
                     <el-form :model="updateForm" ref="updateForm" :rules="rules" >
                         <el-row :gutter="16" type="flex">

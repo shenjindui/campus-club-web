@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -7,7 +6,7 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-tabs @tab-click="handleClick"><!--v-model="menu">-->
+            <el-tabs @tab-click="handleClick">
                 <el-tab-pane :label="`我的财务管理(${pageParms.total})`" name="first" v-show="true">
                     <!--//判断token是否过期合法的对话框-->
                     <el-dialog
@@ -15,7 +14,6 @@
                             :visible.sync="dialogVisible"
                             width="30%"
                             >
-                           <!-- :before-close="handleClose()">-->
                         <span >{{errorMessage}}</span>
                         <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -27,7 +25,7 @@
                             <el-input  placeholder="财务编号" class="handle-input mr10" v-model="params.fundsCd"></el-input>
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -53,13 +51,12 @@
                                 <el-table-column prop="type" label="财务操作类型" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="amountType" label="金额操作类型" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="amount"  label="金额" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="fundsPsccd"  label="是否支付" width="100" align="center" :formatter="formateFundsPsccd" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="fundsPsccd"  label="是否支付" width="100" align="center" :formatter="common.formateFundsPsccd" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
-                            <!-- :current-page="currentPage4"-->
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
@@ -150,14 +147,10 @@
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
-
 <script src="../../../style/js/clubFunds/myFunds.js">
 </script>
 <style scoped>
-    @import '../../../style/csss/common/common.css';/* 引入css文件*/
+    @import '../../../style/csss/common/common.css';
 </style>
 

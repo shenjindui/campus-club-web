@@ -56,8 +56,6 @@ export default {
                     }
                 }]
             },
-            value1: '',
-            value2: '44444',
             /**
              * table 列表菜单数据初始化
              */
@@ -254,8 +252,6 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
