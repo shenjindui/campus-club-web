@@ -155,18 +155,51 @@ export default {
      * @returns {string}
      */
     workFlowStatus:function(row, column){
-        switch(row.associationAgree||row.youthLeagueAgree||row.proposaAgree){
+        switch(row.associationAgree||row.youthLeagueAgree||row.proposaAgree||row.workflowCd){
             case '0':
+                return '待审核';
+                break
+            case 0:
                 return '待审核';
                 break;
             case '1':
                 return '审核中';
                 break;
+            case 1:
+                return '审核中';
+                break;
             case '2':
+                return '审核通过';
+                break;
+            case 2:
                 return '审核通过';
                 break;
             case '3':
                 return '审核不通过';
+                break;
+            case 3:
+                return '审核通过';
+                break;
+            default:
+                return '未知错误';
+        }
+    },
+    /**
+     * 对社团状态进行翻译
+     * @param row
+     * @param column
+     * @returns {string}
+     */
+    formateClubStatus: function (row, column) {
+        switch(row.statusCd){
+            case 0:
+                return '未生效';
+                break;
+            case 1:
+                return '生效';
+                break;
+            case 2:
+                return '失效';
                 break;
             default:
                 return '未知错误';
