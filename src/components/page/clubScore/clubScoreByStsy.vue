@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -46,7 +45,7 @@
                             </el-select>
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -78,8 +77,8 @@
                                 <el-table-column prop="ratersName"  label="评分人员名称" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="score"  label="得分" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="ratersOpin"  label="评分意见" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
@@ -280,7 +279,7 @@
                             </el-select>
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -314,7 +313,6 @@
                             </el-table>
                         </div>
                         <div class="pagination">
-                            <!-- :current-page="currentPage4"-->
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
@@ -392,9 +390,6 @@
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
 
 <script src="../../../style/js/clubScore/clubScoreByStsy.js">

@@ -37,10 +37,10 @@
                                 <el-table-column prop="mobile" label="手机号" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="qq" label="qq号" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="wechat"  label="微信号" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="sexCd" :formatter="formateSex" label="性别" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="sexCd" :formatter="common.formateSex" label="性别" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="realname"  label="真实姓名" width="100" align="center"  :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <el-dialog title="用户信息详情" :visible.sync="detailFormVisible" @close="DetailCancle('detailForm')">
@@ -141,7 +141,7 @@
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="16">
                                         <el-form-item label="真实姓名" :label-width="formLabelWidth"  prop="realname" >
-                                            <el-input v-model.trim="updateForm.realname" placeholder="真实姓名"></el-input>
+                                            <el-input v-model.trim="updateForm.realname" placeholder="真实姓名" :disabled="true"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="16">
@@ -165,10 +165,7 @@
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="16">
                                         <el-form-item label="性别" :label-width="formLabelWidth" prop="sexCd">
-                                          <!--  <el-select v-model="updateForm.sexCd" placeholder="请选择"  :label-width="formLabelWidth" :disabled="true">
-                                                <el-option v-for="item in sexCds" :key="item.value" :label="item.dctValNm" :value="item.value" />
-                                            </el-select>-->
-                                            <el-select v-model="updateForm.sexCd" placeholder="请选择"  :label-width="formLabelWidth">
+                                            <el-select v-model="updateForm.sexCd" placeholder="请选择"  :label-width="formLabelWidth"  :disabled="true">
                                                 <el-option v-for="item in sexCds" :key="item.value" :label="item.dctValNm" :value="item.value" />
                                             </el-select>
                                         </el-form-item>
@@ -186,9 +183,6 @@
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
 
 <script src="../../../style/js/sysUser/sysUser.js">

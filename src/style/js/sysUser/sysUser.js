@@ -96,7 +96,6 @@ export default {
         return {
             message: 'first',
             showHeader: false,
-            value1: '',
             ListData:[],
             pageParms:[
                 {total:''}
@@ -161,7 +160,6 @@ export default {
                 wechat:''
 
             },
-
         }
     },
     created () {
@@ -186,7 +184,7 @@ export default {
                         loginName: selectData[0].loginName,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -219,55 +217,11 @@ export default {
         //对话框确定按钮
         handleClose() {
              this.dialogVisible=false;
-             store.saveIDlist("token",null);
-            this.$router.push("/");
-        },
-        //对状态进行翻译
-       formateStatus: function (row, column) {
-            switch(row.statusCd){
-                case '0':
-                    return '失效';
-                    break;
-                case '1':
-                    return '生效';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
-        },
-        dateformats: function (date) {
-            var date = new Date(date).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+            // store.saveIDlist("token",null);
+            // this.$router.push("/");
         },
         detail(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -286,7 +240,7 @@ export default {
                         uuid: selectData[0].uuid,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -316,7 +270,7 @@ export default {
                     userCode:store.fetchIDlist("userInfo").userCode,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                 }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
@@ -353,7 +307,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {
@@ -387,43 +341,23 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
-        formateSex: function (row, column) {
-            switch(row.sexCd){
-                case '0':
-                    return '女';
-                    break;
-                case '1':
-                    return '男';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
         //tab切换
         handleClick(tab, event) {
-            console.log(tab, event);
             if(tab.name == 'first'){
-                // 触发‘菜单列表’事件
                 //  this.init();
             }else if(tab.name=='second'){
-                // 触发‘用户管理’事件
                 this.second();
             }else if(tab.name=='third'){
                 this.third();
             }
         },
         second(){
-            alert('2222');
-            console.log('我是配置管理');
         },
         third(){
-            alert('2222');
-            console.log('我是配置管理');
         },
         handleSelectionChange(){
             this.isStatus=true;
@@ -448,7 +382,7 @@ export default {
                             userCode:store.fetchIDlist("userInfo").userCode
                         },{headers: {
                                 'content-type': 'application/json',
-                                "token":store.fetchIDlist("token")  //token换成从缓存获取
+                                "token":store.fetchIDlist("token")
                             }})
                         .then(successResponse => {
                             if (successResponse.data.status === 200) {

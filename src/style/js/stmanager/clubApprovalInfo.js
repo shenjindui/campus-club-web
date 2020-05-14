@@ -34,6 +34,11 @@ export default {
     created () {
         //初始文件列表
         this.init();
+        //初始文件列表
+        let pageView=this.$route.query.pageView;
+        if(pageView!=null){
+            this.isShow=false;
+        }
 
     },
     methods: {

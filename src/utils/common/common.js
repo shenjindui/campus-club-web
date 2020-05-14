@@ -205,4 +205,22 @@ export default {
                 return '未知错误';
         }
     },
+    /**
+     * 性别翻译器
+     * @param row
+     * @param column
+     * @returns {string}
+     */
+    formateSex: function (row, column) {
+        switch(row.sexCd){
+            case '0':
+                return '女';
+                break;
+            case '1':
+                return '男';
+                break;
+            default:
+                return '未知错误';
+        }
+    },
 }

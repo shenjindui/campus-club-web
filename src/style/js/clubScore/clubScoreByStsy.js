@@ -600,10 +600,8 @@ export default {
             }
         },
         second(){
-            console.log('我是配置管理');
         },
         third(){
-            console.log('我是配置管理');
         },
         /**
          * 添加取消

@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -7,14 +6,13 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <el-tabs @tab-click="handleClick"><!--(${pageParms.total})-->
+            <el-tabs @tab-click="handleClick">
                 <el-tab-pane :label="`社团已完成的评分`" name="second" v-show="ratersPsccd=='1'">
                     <el-dialog
                             title="提示"
                             :visible.sync="dialogVisible"
                             width="30%"
                     >
-                        <!-- :before-close="handleClose()">-->
                         <span >{{errorMessage}}</span>
                         <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -46,7 +44,7 @@
                             </el-select>
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -62,7 +60,7 @@
                         </div>
                         <p></p>
                         <div>
-                            <el-table :data="ListData" border class="table" ref="multipleTables" @selection-change="handleSelectionChange">
+                            <el-table :data="ListData" border class="table" ref="multipleTables" @selection-change="handleSelectionChange" v-loading="loading">
                                 <el-table-column type="selection" width="40" align="center"></el-table-column>
                                 <el-table-column prop="uuid" label="评分UUID" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="stCd" label="社团编号" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
@@ -75,12 +73,11 @@
                                 <el-table-column prop="ratersOpin"  label="评分意见" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="ratersTypeDdct"  label="评审类型" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="score"  label="得分" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
-                            <!-- :current-page="currentPage4"-->
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
@@ -158,11 +155,7 @@
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
-
 <script src="../../../style/js/clubScore/clubScore.js">
 </script>
 <style scoped>

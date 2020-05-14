@@ -87,14 +87,12 @@ export default {
     },
     created () {
         this.init();
-        this.initApprovered();
         //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
         // store.saveIDlist("currentPage",val);
         this.statusCds = store.fetchIDlist("statusCd");
         let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
         //对话框确定按钮
@@ -200,14 +198,14 @@ export default {
             this.$axios
                 .post("/api/workFlowBusinessList", {
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    pcsStCode:'1'  //审核中的数据
+                    pcsStCode:'1',//审核中的数据
+                    queryType:"st-",//用户加入申请
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data);
                         this.approvalListData=[];
                         this.approvalListData=successResponse.data.data.grid.list;
                         this.pageParms.total=successResponse.data.data.grid.total;
@@ -257,13 +255,11 @@ export default {
         handleSelectionChange(){},
         //tab切换
         handleClick(tab, event) {
-            console.log(tab, event);
             if(tab.name == 'first'){
                 this.firstVisiable=true;
                 this.secondVisiable=false;
                 this.message='first';
             }else if(tab.name=='second'){
-                // 触发‘用户管理’事件
                 this.second();
             }else if(tab.name=='third'){
                 this.third();
@@ -276,7 +272,6 @@ export default {
             this.initApprovered();
         },
         third(){
-            alert('2222');
             console.log('我是配置管理');
         },
         //分页事件 页面尺寸事件
@@ -291,12 +286,12 @@ export default {
             store.saveIDlist("currentPage",val);
             this.search();
         },
-
         initApprovered(){
             this.$axios
                 .post("/api/workFlowBusinessList", {
                     userCode:store.fetchIDlist("userInfo").userCode,
-                    pcsStFlag:'pcsStFlag'  //已经办完标志
+                    pcsStFlag:'pcsStFlag',  //已经办完标志
+                    queryType:"st-",//用户加入申请
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -334,7 +329,6 @@ export default {
         },
         info(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
