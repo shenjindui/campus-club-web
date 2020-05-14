@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -41,7 +40,6 @@
                         <el-button type="primary" icon="search" @click="visible=false">取消</el-button>
                     </el-popover>
                     <!--角色选择器-->
-                    <!-- ///-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
                     <template v-if="message === 'first'">
                         <div class="handle-box">
                            <!-- {{statusCds}}-->
@@ -55,7 +53,7 @@
                             <el-input  placeholder="新闻编号" class="handle-input mr10" v-model="params.newsCd"></el-input>
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -76,23 +74,22 @@
                         </div>
                         <p></p>
                         <div>
-                            <el-table :data="newsListData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange">
+                            <el-table :data="newsListData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange" v-loading="loading">
                                 <el-table-column type="selection" width="40" align="center"></el-table-column>
                                 <el-table-column prop="uuid" label="新闻UUID" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="newsCd" label="新闻编号" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="newsStCd" label="新闻所属社团编号" width="150" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="newsTitle" label="新闻标题" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="newsDesc" label="新闻内容" width="200" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="newsStatus" :formatter="formateStatus" label="新闻状态" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="newsStatus" :formatter="common.formateNewsStatus" label="新闻状态" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="publishTime" label="发布时间" width="130" align="center" :formatter="dateformat" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="publisher" label="发布人编号" width="100" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="trafficVolume" label="访问量" width="100" align="center" :show-overflow-tooltip="true" ></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="130" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="130" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
-                            <!-- :current-page="currentPage4"-->
                             <el-pagination
                                     @size-change="handleSizeChange"
                                     @current-change="handleCurrentChange"
@@ -107,7 +104,7 @@
                             <el-form :model="addForm" ref="addForm" :rules="rules">
                                 <el-row :gutter="32" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="公告所属社团：" :label-width="formLabelWidth"  prop="noticeStCd">
+                                        <el-form-item label="公告所属社团：" :label-width="formLabelWidth">
                                             <el-select v-model="addForm.newsStCd" placeholder="请选择社团" required="required">
                                                 <el-option
                                                         v-for="item in clubList"
@@ -118,7 +115,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="请输入新闻标题" :label-width="formLabelWidth"  prop="newsTitle">
+                                        <el-form-item label="新闻标题" :label-width="formLabelWidth"  prop="newsTitle">
                                             <el-input v-model.trim="addForm.newsTitle" placeholder="请输入新闻标题" clearable></el-input>
                                         </el-form-item>
                                     </el-col>
@@ -215,11 +212,11 @@
                         </el-dialog>
                         <!-- //新闻详情的对话框 end-->
                         <!-- //修改新闻的对话框 begin-->
-                        <el-dialog title="修改菜单" :visible.sync="updateFormVisible" @close="UpdateCancle('updateForm')">
+                        <el-dialog title="修改新闻" :visible.sync="updateFormVisible" @close="UpdateCancle('updateForm')">
                             <el-form :model="updateForm" ref="updateForm" :rules="rules" >
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="公告所属社团：" :label-width="formLabelWidth"  prop="noticeStCd">
+                                        <el-form-item label="公告所属社团：" :label-width="formLabelWidth">
                                             <el-select v-model="updateForm.newsStCd" placeholder="请选择社团" required="required">
                                                 <el-option
                                                         v-for="item in clubList"
@@ -254,20 +251,16 @@
                                 <el-button type="primary" @click="Update('updateForm')" plain>确 定</el-button>
                             </div>
                         </el-dialog>
-                        <!-- //修改菜单的对话框 end-->
+                        <!-- //修改的对话框 end-->
                     </template>
                 </el-tab-pane>
             </el-tabs>
         </div>
     </div>
-
-
-
 </template>
-
 <script src="../../../style/js/clubnews/clubnews.js">
 </script>
 <style scoped>
-    @import '../../../style/csss/common/common.css';/* 引入css文件*/
+    @import '../../../style/csss/common/common.css';
 </style>
 

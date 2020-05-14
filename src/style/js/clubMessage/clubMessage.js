@@ -6,6 +6,9 @@ export default {
         return {
             message: 'first',
             showHeader: false,
+            /**
+             * 时间控件初始化
+             */
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -33,8 +36,6 @@ export default {
                     }
                 }]
             },
-            value1: '',
-            value2: '44444',
             ListData: [],
             pageParms: [
                 {total: ''}
@@ -49,7 +50,7 @@ export default {
             statusCds: [],
             dialogVisible: false,
             errorMessage: '',
-            /* //添加对话框初始化*/
+            //添加对话框初始化
             dialogTableVisible: false,
             dialogFormVisible: false,
             //详情对话框
@@ -88,20 +89,9 @@ export default {
 
             stList: [],
             rules: {
-                menuName: [
-                    {required: true, message: "请输入菜单名称", trigger: "blur"}
+                messagePscOpin: [
+                    {required: true, message: "请输入处理意见", trigger: "blur"}
                 ],
-                url: [{required: true, message: "请输入菜单URL", trigger: "blur"}],
-                sort: [{required: true, message: "请输入菜单排序码", trigger: "blur"},
-                    {
-                        type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
-                            return Number(value);
-                        }
-                    }
-                ],
-                leafFlagCd: [{required: true, message: "请选择", trigger: "blur"}],
-                parentMenuCode: [{required: true, message: "请选择", trigger: "blur"}],
-
             },
             messagePsccdList: [
                 {
@@ -113,17 +103,19 @@ export default {
                     Name: '处理中'
                 }
             ],
+            /**
+             * vue loading 加载效果
+             */
+            loading:true,
         }
 
 
     },
     created () {
         this.init();
-        //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
         this.initDdct();
     },
     methods: {
@@ -180,36 +172,8 @@ export default {
         //对话框确定按钮
         handleClose() {
              this.dialogVisible=false;
-             store.saveIDlist("token",null);
-            this.$router.push("/");
-        },
-        //对状态进行翻译
-       formateStatus: function (row, column) {
-            switch(row.messagePsccd){
-                case '0':
-                    return '处理中';
-                    break;
-                case '1':
-                    return '已处理';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
-        dateformatUpdateTime: function (row, column) {
-            var date = new Date(row.updateTime).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-        },
-        dateformatCreateTime: function (row, column) {
-            var date = new Date(row.createTime).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-        },
-        dateformats: function (date) {
-            var date = new Date(date).toJSON();
-            return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().
-            replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+             //store.saveIDlist("token",null);
+             //this.$router.push("/");
         },
         reset(){
             this.params={};
@@ -246,6 +210,7 @@ export default {
                 .catch(failResponse => {});
         },
         search(){
+            this.loading = true;
             this.$axios
                     .post("/api/messageslist", {
                         messageCd: this.params.messageCd,
@@ -265,6 +230,7 @@ export default {
                         this.ListData=successResponse.data.data.grid.list;
                         this.total='';
                         this.total=successResponse.data.data.grid.total;
+                        this.loading = false;
                     }
                     if (successResponse.data.status === 400) {
                         let warnMessage = successResponse.data.description;
@@ -423,8 +389,8 @@ export default {
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
                             this.detailForm=successResponse.data.data;
-                            this.detailForm.createTime=this.dateformats(this.detailForm.createTime);
-                            this.detailForm.updateTime=this.dateformats(this.detailForm.updateTime);
+                            this.detailForm.createTime=this.dateFormate.dateformat(this.detailForm.createTime);
+                            this.detailForm.updateTime=this.dateFormate.dateformat(this.detailForm.updateTime);
                             if(this.detailForm.messagePsccd=='0'){
                                 this.detailForm.messagePsccdDdct="处理中";
                             }
@@ -449,6 +415,7 @@ export default {
             }
         },
         init(){
+            this.loading = true;
             this.$axios
                 .post("/api/messageslist", {
                     stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
@@ -461,6 +428,7 @@ export default {
                         this.ListData=[];
                         this.ListData=successResponse.data.data.grid.list;
                         this.pageParms.total=successResponse.data.data.grid.total;
+                        this.loading = false;
                     }
                     if (successResponse.data.status === 400) {
                         let warnMessage = successResponse.data.description;

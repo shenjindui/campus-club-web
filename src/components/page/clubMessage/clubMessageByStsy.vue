@@ -1,4 +1,3 @@
-
 <template>
     <div class="">
         <div class="crumbs">
@@ -42,7 +41,7 @@
                             </el-select>
                             <el-date-picker
                                     v-model="params.paramsTime"
-                                    type="daterange"
+                                    type="datetimerange"
                                     align="right"
                                     unlink-panels
                                     range-separator="至"
@@ -59,20 +58,20 @@
                         </div>
                         <p></p>
                         <div>
-                            <el-table :data="ListData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange">
+                            <el-table :data="ListData" border class="table" ref="multipleTable" @selection-change="handleSelectionChange"  v-loading="loading">
                                 <el-table-column type="selection" width="40" align="center"></el-table-column>
                                 <el-table-column prop="uuid" label="留言UUID" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="messageCd" label="留言编号" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="messageSno" label="留言工号" width="150" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="messageName" label="留言人名字" width="130" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="messageStCd" label="留言所属社团编号" width="160" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="messagePsccd" label="留言状态" :formatter="formateStatus"  width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="messagePsccd" label="留言状态" :formatter="common.formateMessagePsccd"  width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="messageDesc"  label="留言内容" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="messagePscCode"  label="留言处理人编号" width="120" align="center"  :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="messagePscName"  label="留言处理人姓名" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="messagePscOpin"  label="留言处理意见" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="createTime" :formatter="dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="updateTime" :formatter="dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="updateTime" :formatter="dateFormate.dateformatUpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
                             </el-table>
                         </div>
                         <div class="pagination">
@@ -90,7 +89,7 @@
                             <el-form :model="addForm" ref="addForm" :rules="rules">
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="11">
-                                        <el-form-item label="所属社团编号" :label-width="formLabelWidth"  prop="type">
+                                        <el-form-item label="所属社团编号" :label-width="formLabelWidth"  prop="messageStCd">
                                             <el-select v-model="addForm.messageStCd" placeholder="所属社团编号" required="required" >
                                                 <el-option
                                                         v-for="item in stList"
@@ -101,7 +100,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="请输入留言内容" :label-width="formLabelWidth" prop="stCd">
+                                        <el-form-item label="请输入留言内容" :label-width="formLabelWidth" prop="messageDesc">
                                             <el-input type="textarea" :rows="2" placeholder="请输入留言内容" v-model="addForm.messageDesc"></el-input>
                                         </el-form-item>
                                     </el-col>

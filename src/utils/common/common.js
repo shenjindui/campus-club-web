@@ -223,4 +223,23 @@ export default {
                 return '未知错误';
         }
     },
+
+    /**
+     * 留言状态进行翻译
+     * @param row
+     * @param column
+     * @returns {string}
+     */
+    formateMessagePsccd: function (row, column) {
+        switch(row.messagePsccd){
+            case '0':
+                return '处理中';
+                break;
+            case '1':
+                return '已处理';
+                break;
+            default:
+                return '未知错误';
+        }
+    },
 }

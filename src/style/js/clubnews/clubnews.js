@@ -1,8 +1,5 @@
 //引入存储数据的js
 import store from "../../../store/store";
-
-//引入表单验证
-//import { validateLen, validateChart_ } from '../../../utils/validate/validate'
 export default {
     name: 'news',
     data() {
@@ -12,21 +9,9 @@ export default {
             },
             message: 'first',
             showHeader: false,
-            unread: [{
-                date: '2018-04-19 20:00:00',
-                title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护',
-            },{
-                date: '2018-04-19 21:00:00',
-                title: '今晚12点整发大红包，先到先得',
-            }],
-            read: [{
-                date: '2018-04-19 20:00:00',
-                title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-            }],
-            recycle: [{
-                date: '2018-04-19 20:00:00',
-                title: '【系统通知】该系统将于今晚凌晨2点到5点进行升级维护'
-            }],
+            /**
+             * 时间控件初始化
+             */
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -54,8 +39,6 @@ export default {
                     }
                 }]
             },
-            value1: '',
-            value2: '44444',
             newsListData:[],
             pageParms:[
                 {total:''}
@@ -66,7 +49,7 @@ export default {
             statusCds:[],
             dialogVisible: false,
             errorMessage:'',
-           /* //添加对话框初始化*/
+            //添加对话框初始化
             dialogTableVisible: false,
             dialogFormVisible: false,
             addForm: {
@@ -107,18 +90,9 @@ export default {
                 }
             ],
             rules: {
-                menuName: [
-                    { required: true, message: "请输入菜单名称", trigger: "blur" }
-                ],
-                url: [{ required: true, message: "请输入菜单URL", trigger: "blur" }],
-                sort: [{ required: true, message: "请输入菜单排序码", trigger: "blur" },
-                       { type: 'number', message: '请输入数字格式', trigger: 'blur', transform(value) {
-                            return Number(value);
-                        }}
-                ],
-                leafFlagCd :[{ required: true, message: "请选择", trigger: "blur" }],
-                parentMenuCode :[{ required: true, message: "请选择", trigger: "blur" }],
-
+                noticeStCd: [{ required: true, message: "请选择社团", trigger: "blur" }],
+                newsTitle: [{ required: true, message: "请输入新闻标题", trigger: "blur" }],
+                newsDesc: [{ required: true, message: "请输入内容", trigger: "blur" }],
             },
             parentMenuCodes:[],
 
@@ -131,18 +105,18 @@ export default {
             roleListData:[],
             selectMenuData:[],
             isStatus:true,
+            /**
+             * vue loading 加载效果
+             */
+            loading:true,
         }
     },
     created () {
         this.init();
         this.clublistinit();
-        //页面初始化清空分页参数
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
-        // store.saveIDlist("currentPage",val);
         this.statusCds = store.fetchIDlist("statusCd");
-        let token=store.fetchIDlist("token");
-        //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
            clublistinit(){
@@ -155,7 +129,6 @@ export default {
                     }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data);
                         this.clubList=[];
                         this.clubList=successResponse.data.data.grid.list;
                     }
@@ -177,7 +150,6 @@ export default {
             this.$refs[updateForm].resetFields();
             this.updateFormVisible=false;
         },
-        //添加菜单取消操作时，重置表单的值
         AddCancle(addForm){
             this.$refs[addForm].resetFields();
             this.dialogFormVisible=false;
@@ -187,13 +159,12 @@ export default {
             this.detailFormVisible=false;
             this.init();
         },
-        //菜单添加回调函数
         Add(addForm){
             this.$refs[addForm].validate(valid => {
                 if (valid) {
                     this.$axios
                         .post("/api/newsadd", {
-                            newsStCd: this.addForm.newsStCd,//菜单名称
+                            newsStCd: this.addForm.newsStCd,
                             newsTitle: this.addForm.newsTitle,
                             newsDesc: this.addForm.newsDesc,
                             fundsAssociationCode:store.fetchIDlist("userInfo").userCode,
@@ -226,68 +197,14 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    //alert('error');
-                    console.log("error submit!!");
                     return false;
                 }
             });
         },
-        //对话框确定按钮
         handleClose() {
              this.dialogVisible=false;
-             store.saveIDlist("token",null);
-            this.$router.push("/");
-        },
-        //对状态进行翻译
-       formateStatus: function (row, column) {
-            switch(row.newsStatus){
-                case '0':
-                    return '失效';
-                    break;
-                case '1':
-                    return '生效';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
-        //对叶子节点进行翻译
-        formateLeafFlagCd: function (row, column) {
-            switch(row.leafFlagCd){
-                case '0':
-                    return '否';
-                    break;
-                case '1':
-                    return '是';
-                    break;
-                default:
-                    return '未知错误';
-            }
-        },
-        //对时间进行格式化
-        dateformat: function (row, column) {
-            let d = new Date(row.createTime.substr(0, 19));//加入substr(0, 19)处理兼容ios报错NAN
-            let year = d.getFullYear();       //年
-            let month = d.getMonth() + 1;     //月
-            let day = d.getDate();            //日
-            let hh = d.getHours();            //时
-            let mm = d.getMinutes();          //分
-            let ss = d.getSeconds();           //秒
-            let clock = year + "-";
-            if (month < 10)
-                clock += "0";
-            clock += month + "-";
-            if (day < 10)
-                clock += "0";
-            clock += day + " ";
-            if (hh < 10)
-                clock += "0";
-            clock += hh + ":";
-            if (mm < 10) clock += '0';
-            clock += mm + ":";
-            if (ss < 10) clock += '0';
-            clock += ss;
-            return (clock);
+             //store.saveIDlist("token",null);
+             //this.$router.push("/");
         },
         handleSelectionChange(){
             this.isStatus=true;
@@ -300,6 +217,7 @@ export default {
             this.params={}
         },//重置事件，将参数置空
         search(){
+            this.loading = true;
             this.$axios
                     .post("/api/clubnewslists", {
                         newsCd: this.params.newsCd,
@@ -314,11 +232,11 @@ export default {
                         }})
                     .then(successResponse => {
                     if (successResponse.data.status === 200) {
-                        console.log(successResponse.data.data);
                         this.newsListData=[];
                         this.newsListData=successResponse.data.data.grid.list;
                         this.total='';
                         this.total=successResponse.data.data.grid.total;
+                        this.loading = false;
                     }
                     if (successResponse.data.status === 400) {
                         let warnMessage = successResponse.data.description;
@@ -352,7 +270,6 @@ export default {
                     type: 'warning'
                 })
             }else{
-               // console.log(JSON.stringify(selectData));
                // this.selectRoleCode=selectData.roleCode;
                 this.visible=false;
                 this.$axios
@@ -361,7 +278,7 @@ export default {
                         selectRoleCode: selectData[0].roleCode,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -409,7 +326,7 @@ export default {
                         userCode:store.fetchIDlist("userInfo").userCode,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -432,7 +349,6 @@ export default {
         },
         deletes(){
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -455,7 +371,7 @@ export default {
                         }, {
                             headers: {
                                 'content-type': 'application/json',
-                                "token": store.fetchIDlist("token")  //token换成从缓存获取
+                                "token": store.fetchIDlist("token")
                             }
                         })
                         .then(successResponse => {
@@ -567,7 +483,7 @@ export default {
                         userCode:store.fetchIDlist("userInfo").userCode,
                     },{headers: {
                             'content-type': 'application/json',
-                            "token":store.fetchIDlist("token")  //token换成从缓存获取
+                            "token":store.fetchIDlist("token")
                         }})
                     .then(successResponse => {
                         if (successResponse.data.status === 200) {
@@ -590,18 +506,20 @@ export default {
             }
         },
         init(){
+            this.loading = true;
             this.$axios
                 .post("/api/clubnewslists", {
                     stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
-                        "token":store.fetchIDlist("token")  //token换成从缓存获取
+                        "token":store.fetchIDlist("token")
                 }})
                 .then(successResponse => {
                     if (successResponse.data.status === 200) {
                         this.newsListData=[];
                         this.newsListData=successResponse.data.data.grid.list;
                         this.pageParms.total=successResponse.data.data.grid.total;
+                        this.loading = false;
                     }
                     if (successResponse.data.status === 400) {
                         let warnMessage = successResponse.data.description;
@@ -619,30 +537,15 @@ export default {
         },
         //tab切换
         handleClick(tab, event) {
-            console.log(tab, event);
             if(tab.name == 'first'){
-                // 触发‘菜单列表’事件
-              //  this.init();
             }else if(tab.name=='second'){
-                // 触发‘用户管理’事件
-                this.second();
             }else if(tab.name=='third'){
-                 this.third();
             }
-        },
-        second(){
-            alert('2222');
-            console.log('我是配置管理');
-        },
-        third(){
-            alert('2222');
-            console.log('我是配置管理');
         },
         add(){
             this.dialogFormVisible = true;
             this.initParentList();
         },
-        //初始化一级菜单
         Update(updateForm){
             this.$refs[updateForm].validate(valid => {
                 if (valid) {
@@ -681,7 +584,6 @@ export default {
                         })
                         .catch(failResponse => {});
                 } else {
-                    console.log("error submit!!");
                     return false;
                 }
             });
@@ -693,8 +595,6 @@ export default {
         },
         // /页面当前页
         handleCurrentChange(val){
-            // alert(val);
-            //this.currentPage=val;
             store.saveIDlist("currentPage",val);
             this.search();
         },
