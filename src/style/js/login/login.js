@@ -95,7 +95,7 @@ export default {
              */
             loading:true,
             count: '',
-            timer: null
+            timer: null,
         };
     },
     created () {

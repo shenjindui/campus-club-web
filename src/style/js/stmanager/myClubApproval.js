@@ -235,7 +235,6 @@ export default {
         },
         approver(){  //审核
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",

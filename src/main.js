@@ -53,6 +53,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI, {
     size: 'small'
 });
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
 /**
  * 设置全局的请求次数，请求的间隙
  * @type {number}

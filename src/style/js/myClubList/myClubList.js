@@ -84,7 +84,9 @@ export default {
         init(){
             this.$axios
                 .post("/api/clublistByStsy", {
-                    memberSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
+                    memberSno: (store.fetchIDlist("roleInfo").roleCode!='role-00001'&&
+                        store.fetchIDlist("roleInfo").roleCode!='role-00007')==true
+                        ?store.fetchIDlist("userInfo").jobNum:null,
                     userCode:store.fetchIDlist("userInfo").userCode
                 },{headers: {
                         'content-type': 'application/json',

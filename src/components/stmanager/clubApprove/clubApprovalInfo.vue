@@ -14,7 +14,7 @@
                         <el-row :gutter="20" type="flex">
                             <el-col :span="18">
                                 <el-form-item label="头像">
-                                    <img :src="baseInfoForm.headPortrait[0].fileRte" class="user-avator" alt="" style="margin-left: 250px"
+                                    <img :src="baseInfoForm.headPortrait[0].fileRte" class="user-avator" alt=""
                                          v-if="baseInfoForm.headPortrait!=null&&baseInfoForm.headPortrait.length>0">
                                 </el-form-item>
                             </el-col>

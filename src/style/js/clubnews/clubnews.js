@@ -109,9 +109,14 @@ export default {
              * vue loading 加载效果
              */
             loading:true,
+            isShow:true
         }
     },
     created () {
+        if(((store.fetchIDlist("roleInfo").roleCode!='role-00001'&&
+            store.fetchIDlist("roleInfo").roleCode!='role-00007'))==false) {
+            this.isShow = false;
+        }
         this.init();
         this.clublistinit();
         store.saveIDlist("pageSize",null);
@@ -122,7 +127,9 @@ export default {
            clublistinit(){
             this.$axios
                 .post("/api/clublist", {
-                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
+                    stChargeSno: (store.fetchIDlist("roleInfo").roleCode!='role-00001'&&
+                        store.fetchIDlist("roleInfo").roleCode!='role-00007')==true
+                        ?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")  //token换成从缓存获取
@@ -223,7 +230,9 @@ export default {
                         newsCd: this.params.newsCd,
                         newsStatus: this.params.newsStatus,
                         paramsTime: this.params.paramsTime,
-                        stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
+                        stChargeSno: (store.fetchIDlist("roleInfo").roleCode!='role-00001'&&
+                            store.fetchIDlist("roleInfo").roleCode!='role-00007')==true
+                            ?store.fetchIDlist("userInfo").jobNum:null,
                         currentPage: store.fetchIDlist("currentPage")==0?1:store.fetchIDlist("currentPage"),
                         pageSize:store.fetchIDlist("pageSize")
                     },{headers: {
@@ -509,7 +518,9 @@ export default {
             this.loading = true;
             this.$axios
                 .post("/api/clubnewslists", {
-                    stChargeSno: store.fetchIDlist("roleInfo").roleCode!='role-00001'?store.fetchIDlist("userInfo").jobNum:null,
+                    stChargeSno: (store.fetchIDlist("roleInfo").roleCode!='role-00001'&&
+                        store.fetchIDlist("roleInfo").roleCode!='role-00007')==true
+                        ?store.fetchIDlist("userInfo").jobNum:null,
                 },{headers: {
                         'content-type': 'application/json',
                         "token":store.fetchIDlist("token")

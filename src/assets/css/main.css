@@ -171,3 +171,6 @@ a {
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
 }
+.sjd {
+    background-image: url(../img/login-reg/login_bg.png);
+}

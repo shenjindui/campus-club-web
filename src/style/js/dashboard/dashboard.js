@@ -388,7 +388,7 @@ export default {
         setOnmessageMessage (event) {
             // 根据服务器推送的消息做自己的业务处理
             console.log('服务端返回：' + event.data+"----")
-            if(event.data!=''||event.data!=null||event.data!='{}'){
+            if(event.data!=''&&event.data!=null&&event.data!='{}'){
                 this.$notify.info({
                     title: '系统提示',
                     message: '您有未缴纳的社费信息,请及时前往缴纳！',

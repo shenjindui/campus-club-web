@@ -132,13 +132,13 @@
          <p> 咨询电话：0591-22863333</p>
       </div>
       <div class="login-footer-right">
-        <p></p>
         <p> 忘记密码：用户忘记密码并且无法找回的，可携带本人有效身份证件到</p>
-        <p> 互联网经贸学院（11#207），由管理员登记后予以修改</p>
+        <p> 福建工程学院互联网经贸学院，由管理员登记后予以修改</p>
+          <p> 系统作者：软件1602_沈金堆（3168907225）</p>
       </div>
-      <div class="login-footer-right"></div>
     </div>
   </div>
+
 </template>
 
 <script src="../../../style/js/login/login.js">

@@ -30,8 +30,8 @@
     height: 100%;
     background-image: url(../../../assets/img/login-reg/login-remain.png);
     background-repeat: no-repeat;
-    margin-left: 180px;
-    margin-top: 20px;
+    margin-left: 150px;
+ /*   margin-top: 20px;*/
     float: left;
 }
 .login-footer-left p{
@@ -94,4 +94,12 @@
     margin-left: 150px;
     float: right;
     clear: both;
+}
+.sjd {
+    position: relative;
+    width: 100%;
+    height: 70%;
+    /*background-image: url(../../../assets/img/login-bg.jpg);*/
+    background-image: url(../../../assets/img/login-reg/login_bg.png);
+    background-size: 100%;
 }
