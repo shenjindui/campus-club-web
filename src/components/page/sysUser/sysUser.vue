@@ -141,7 +141,7 @@
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="16">
                                         <el-form-item label="真实姓名" :label-width="formLabelWidth"  prop="realname" >
-                                            <el-input v-model.trim="updateForm.realname" placeholder="真实姓名" :disabled="true"></el-input>
+                                            <el-input v-model.trim="updateForm.realname" placeholder="真实姓名"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="16">
@@ -165,12 +165,23 @@
                                 <el-row :gutter="16" type="flex">
                                     <el-col :span="16">
                                         <el-form-item label="性别" :label-width="formLabelWidth" prop="sexCd">
-                                            <el-select v-model="updateForm.sexCd" placeholder="请选择"  :label-width="formLabelWidth"  :disabled="true">
+                                            <el-select v-model="updateForm.sexCd" placeholder="请选择"  :label-width="formLabelWidth">
                                                 <el-option v-for="item in sexCds" :key="item.value" :label="item.dctValNm" :value="item.value" />
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
                                     <input v-model.trim="updateForm.uuid" :hidden="true"></input>
+                                    <!--<el-col :span="16">
+                                        <el-upload
+                                                class="upload-demo"
+                                                action="/api/updateFile"
+                                                :headers="token"
+                                                :data="{fileurpose: 4,userCode:updateForm.userCode,stCd:updateForm.userCode}"
+                                                :limit="1"
+                                                :show-file-list="false"
+                                                 >
+                                        </el-upload>
+                                    </el-col>-->
                                 </el-row>
                             </el-form>
                             <div slot="footer" class="dialog-footer">

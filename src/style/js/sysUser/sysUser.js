@@ -160,6 +160,7 @@ export default {
                 wechat:''
 
             },
+            token: {token: store.fetchIDlist("token") },
         }
     },
     created () {
