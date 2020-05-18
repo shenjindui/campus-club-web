@@ -233,7 +233,6 @@ export default {
         },
         approver(){  //审核
             const selectData=this.$refs.multipleTable.selection;
-            console.log(selectData[0])
             if(selectData.length>1){
                 this.$message({
                     message: "请最多选择一条",
@@ -245,9 +244,10 @@ export default {
                     type: 'warning'
                 })
             }else{
-                //console.log(JSON.stringify(selectData[0]))
-                this.$router.push({path:'/clubjb/clubActivityInfo',query:{businessAssociationCode:selectData[0].businessAssociationCode,
+                this.$router.push({path:'/clubfh/clubApproveInfo',query:{
                         uuid:selectData[0].uuid}});
+               /* this.$router.push({path:'/clubjb/clubActivityInfo',query:{businessAssociationCode:selectData[0].businessAssociationCode,
+                        uuid:selectData[0].uuid}});*/
             }
         },
         handleSelectionChange(){},

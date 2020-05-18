@@ -254,7 +254,7 @@
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-lx-people grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
+                                    <div class="grid-num">{{ initResult.stLength==null?0:initResult.stLength}}</div>
                                     <div>系统社团数量</div>
                                 </div>
                             </div>
@@ -265,7 +265,7 @@
                             <div class="grid-content grid-con-2">
                                 <i class="el-icon-lx-notice grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
+                                    <div class="grid-num">{{ initResult.clubActivityLength==null?0:initResult.clubActivityLength}}</div>
                                     <div>系统社团活动数量</div>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@
                             <div class="grid-content grid-con-3">
                                 <i class="el-icon-lx-goods grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">5000</div>
+                                    <div class="grid-num">{{ initResult.sysUserListLength==0?0:initResult.sysUserListLength}}</div>
                                     <div>系统用户数量</div>
                                 </div>
                             </div>
