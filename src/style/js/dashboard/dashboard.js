@@ -160,6 +160,8 @@ export default {
                 }
             ],
             stNewsList:[],
+            dialogVisible:false,
+            errorMessage:'',
             data: [{
                 name: '2018/09/04',
                 value: 1083
@@ -261,10 +263,15 @@ export default {
         this.handleListener();
     },
     deactivated(){
-        window.removeEventListener('resize', this.renderChart);
+        //window.removeEventListener('resize', this.renderChart);
         bus.$off('collapse', this.handleBus);
     },
     methods: {
+        handleClose() {
+            this.dialogVisible=false;
+            // store.saveIDlist("token",null);
+            // this.$router.push("/");
+        },
         init(roleCode){
             this.$axios
                 .post("/api/initUserInfo", {
@@ -288,11 +295,13 @@ export default {
                         })
                     }
                     if (successResponse.data.status === 500) { //后台异常时
-                        let warnMessage = successResponse.data.description;
+                        /*let warnMessage = successResponse.data.description;
                         this.$message({
                             message: warnMessage,
                             type: 'warning'
-                        })
+                        })*/
+                        this.errorMessage =successResponse.data.description;
+                        this.dialogVisible=true;
                     }
                 })
                 .catch(failResponse => {});
@@ -460,8 +469,8 @@ export default {
             }, 300);
         },
         renderChart(){
-            this.$refs.bar.renderChart();
-            this.$refs.line.renderChart();
+            //this.$refs.bar.renderChart();
+            //this.$refs.line.renderChart();
         },
     }
 }
