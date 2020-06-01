@@ -25,8 +25,8 @@
         },
         methods: {
             conectWebSocket: function() {
-                /*window.location.href = "http://localhost:8080/";*/
-                window.location.href = "http://106.54.55.188:8080/";
+                window.location.href = "http://localhost:8080/";
+                /*window.location.href = "http://106.54.55.188:8080/";*/
             }
         }
     };

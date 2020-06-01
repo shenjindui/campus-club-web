@@ -22,10 +22,12 @@ export default {
                 stDesc:''
             },
             params:[],
+            roleInfo:[],
         }
     },
     created () {
         let userInfo=store.fetchIDlist("userInfo");
+        this.roleInfo=store.fetchIDlist("roleInfo");
         this.init(userInfo.jobNum);
         store.saveIDlist("pageSize",null);
         store.saveIDlist("currentPage",null);
@@ -35,6 +37,9 @@ export default {
         //console.log("用户Token"+JSON.stringify(this.statusCds));
     },
     methods: {
+        add(){
+            this.$router.push({path:'/clubApproval'});
+        },
         dateformat: function (date) {
             var date = new Date(date).toJSON();
             return new Date(+new Date(date) + 8 * 3600 * 1000).toISOString().

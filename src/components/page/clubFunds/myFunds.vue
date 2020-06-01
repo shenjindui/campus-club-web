@@ -48,7 +48,7 @@
                                 <el-table-column prop="fundsCd" label="财务编号" width="150" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="stCd" label="财务所属社团编号" width="150" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="fundsAssociationCode" label="财务关联编号" width="130" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="type" label="财务操作类型" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="typeDdct" label="财务操作类型" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="amountType" label="金额操作类型" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="amount"  label="金额" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="fundsPsccd"  label="是否支付" width="100" align="center" :formatter="common.formateFundsPsccd" :show-overflow-tooltip="true"></el-table-column>

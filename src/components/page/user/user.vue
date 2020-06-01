@@ -58,17 +58,17 @@
                                 <el-table-column prop="userCode" label="用户编号" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="jobNum" label="用户工号" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="loginName" label="用户登录名" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="realName" label="真实姓名" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <el-table-column prop="realname" label="真实姓名" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="password" label="用户密码" width="110" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="statusCd" :formatter="formateStatus" label="用户状态" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="departCode" label="所属部门编号" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
+                                <!--<el-table-column prop="departCode" label="所属部门编号" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>-->
                                 <el-table-column prop="sexCd" :formatter="formateSex" label="用户性别" width="100" align="center" :show-overflow-tooltip="true"></el-table-column>
-                                <el-table-column prop="address" label="注册地址"  width="120" align="center":show-overflow-tooltip="true"></el-table-column>
+                                <!--<el-table-column prop="address" label="注册地址"  width="120" align="center":show-overflow-tooltip="true"></el-table-column>-->
                                 <el-table-column prop="email" label="邮箱"  width="120" align="center":show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="qq" label="QQ号" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="mobile" label="手机号" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
                                 <el-table-column prop="wechat" label="微信号" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
-                                <el-table-column prop="remark" label="备注" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>
+                                <!--<el-table-column prop="remark" label="备注" width="120" align="center" :show-overflow-tooltip="true" ></el-table-column>-->
                                 <el-table-column prop="createTime" :formatter="dateformat" label="创建时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="createUser"  label="创建人" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>
                                 <el-table-column prop="updateTime" :formatter="dateformat" label="更新时间" width="120" align="center" :show-overflow-tooltip="true"></el-table-column>

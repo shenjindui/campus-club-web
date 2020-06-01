@@ -269,8 +269,8 @@ export default {
     methods: {
         handleClose() {
             this.dialogVisible=false;
-            // store.saveIDlist("token",null);
-            // this.$router.push("/");
+             //store.saveIDlist("token",null);
+             //this.$router.push("/");
         },
         init(roleCode){
             this.$axios

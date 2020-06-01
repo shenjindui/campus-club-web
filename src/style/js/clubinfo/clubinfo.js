@@ -86,8 +86,8 @@ export default {
         //对话框确定按钮
         handleClose() {
             this.dialogVisible=false;
-            //store.saveIDlist("token",null);
-            //this.$router.push("/");
+            store.saveIDlist("token",null);
+            this.$router.push("/");
         },
         /**
          * 重置事件将参数置空

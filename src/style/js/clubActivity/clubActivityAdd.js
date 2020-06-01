@@ -145,8 +145,8 @@ export default {
          */
         handleClose() {
             this.dialogVisible=false;
-            //store.saveIDlist("token",null);
-            //this.$router.push("/");
+            store.saveIDlist("token",null);
+            this.$router.push("/");
         },
         /**
          * 文件上传成功调用的事件

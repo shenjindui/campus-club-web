@@ -12,6 +12,7 @@
                     <el-input  placeholder="请输入社团编号" style="width: 200px" v-model="params.stCd"></el-input>&nbsp;
                     <el-button type="danger" icon="search" @click="search()">搜索</el-button>
                     <el-button type="danger" icon="reset" @click="reset()">重置</el-button>
+                   <!-- <el-button type="danger" icon="reset" @click="add()" v-show="roleInfo.roleCode=='role-00007'">我要创建</el-button>-->
                 </div>
             </el-row>
             <el-row>

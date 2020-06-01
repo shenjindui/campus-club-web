@@ -135,8 +135,8 @@ export default {
          */
         handleClose() {
             this.dialogVisible=false;
-            //store.saveIDlist("token",null);
-            //this.$router.push("/");
+            store.saveIDlist("token",null);
+            this.$router.push("/");
         },
         next() {
             if (this.active++ > 2) {

@@ -19,7 +19,7 @@
                 <el-table-column width="170" property="roleCode" label="角色编号"></el-table-column>
                 <el-table-column width="200" property="roleName" label="角色名称"></el-table-column>
                 <el-table-column width="300" property="uuid" label="角色UUID"></el-table-column>
-                <el-table-column width="300" property="createTime" label="创建时间"></el-table-column>
+                <el-table-column width="300" property="createTime" :formatter="dateFormate.dateformatCreateTime" label="创建时间"></el-table-column>
             </el-table>
             <el-button type="primary" icon="search" @click="comfirm()">确定</el-button>
             <el-button type="primary" icon="search" @click="visible=false">取消</el-button>

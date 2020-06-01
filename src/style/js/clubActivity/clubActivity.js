@@ -89,8 +89,8 @@ export default {
          */
         handleClose() {
             this.dialogVisible=false;
-            //store.saveIDlist("token",null);
-            //this.$router.push("/");
+            store.saveIDlist("token",null);
+            this.$router.push("/");
         },
         /**
          * 重置函数将参数置空

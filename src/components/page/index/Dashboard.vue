@@ -28,7 +28,7 @@
                         </div>
                     </div>
                     <div class="user-info-list">登录时间：<span>{{ userInfo.lastLoginTime }}</span></div>
-                    <div class="user-info-list">登录地点：<span>{{ userInfo.lastLoginAddress }}</span></div>
+                    <div class="user-info-list">登录地点：<span><!--{{ userInfo.lastLoginAddress }}-->系统内网</span></div>
                 </el-card>
                 <el-dialog
                         title="提示"

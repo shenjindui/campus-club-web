@@ -198,8 +198,8 @@ export default {
          */
         handleClose() {
             this.dialogVisible=false;
-            //store.saveIDlist("token",null);
-            //this.$router.push("/");
+            store.saveIDlist("token",null);
+            this.$router.push("/");
         },
         /**
          * 重置按钮事件//将参数置空

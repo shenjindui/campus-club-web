@@ -45,7 +45,7 @@
                             <el-button type="primary" icon="reset" @click="reset()">重置</el-button>
                         </div>
                         <div class="handle-box">
-                            <el-button type="primary" icon="search" @click="add()" plain>新增</el-button>
+                           <!-- <el-button type="primary" icon="search" @click="add()" plain>新增</el-button>-->
                             <el-button type="success" icon="reset" @click="edit()" plain>修改</el-button>
                             <!--<el-button type="warning" icon="search" @click="deletes()" plain v-if="isStatus">失效</el-button>
                             <el-button type="warning" icon="search" @click="deletes()" plain v-else>生效</el-button>-->

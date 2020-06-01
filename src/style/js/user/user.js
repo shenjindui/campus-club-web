@@ -229,8 +229,14 @@ export default {
                 case 1:
                     return '男';
                     break;
+                case '0':
+                    return '女';
+                    break;
+                case '1':
+                    return '男';
+                    break;
                 default:
-                    return '未知错误';
+                    return '暂无完善';
             }
         },
         //对时间进行格式化
